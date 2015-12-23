@@ -9,24 +9,31 @@ function AppCtrl(routine531) {
 
     vm.program = routine531;
 
+    // TODO: move to service
     vm.records = {
         overheadPress: {
             label: 'Overhead Press',
-            calculatedOneRM: 0,
         },
         deadlift: {
             label: 'Deadlift',
-            calculatedOneRM: 0,
         },
         benchPress: {
             label: 'Bench Press',
-            calculatedOneRM: 0,
         },
         backSquat: {
             label: 'Back Squat',
-            calculatedOneRM: 0,
         },
     };
+    vm.updateRecords = function() {
+        //TODO:
+        console.log('update 1rms')
+    }
+
+    vm.oneRM = function(reps, weight) {
+        reps = parseInt(reps, 10);
+        weight = parseInt(weight, 10);
+        return weight * (1 + reps/30);
+    }
 
     vm.currentCycle = 0;
 }

@@ -17,10 +17,11 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <form>
+        <form name="recordForm"
+            ng-submit="recordForm.$valid && app.updateRecords()">
             <h2>Configuration</h2>
             <div class="row">
-                <div class="col-sm-6" ng-repeat="record in app.records">
+                <div class="col-sm-6" ng-repeat="(key, record) in app.records">
                     <div class="panel panel-default">
                         <div class="panel-heading">{{record.label}}</div>
                         <div class="panel-body">
@@ -28,13 +29,21 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="">Reps</label>
-                                        <input class="form-control" type="text" />
+                                        <input class="form-control"
+                                            id=""
+                                            type="text"
+                                            ng-model="record.reps"
+                                            required />
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="">Weight</label>
-                                        <input class="form-control" type="text" />
+                                        <input class="form-control"
+                                            id=""
+                                            type="text"
+                                            ng-model="record.weight"
+                                            required />
                                     </div>
                                 </div>
                             </div>
@@ -48,6 +57,7 @@
                     Save
                 </button>
             </div>
+            <pre>{{app.records |json}}</pre>
             <hr />
         </form>
 
