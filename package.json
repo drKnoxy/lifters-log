@@ -1,0 +1,24 @@
+{
+  "name": "lifters-log",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drKnoxy/lifters-log.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drKnoxy/lifters-log/issues"
+  },
+  "homepage": "https://github.com/drKnoxy/lifters-log",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^1.1.0"
+  }
+}

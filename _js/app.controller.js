@@ -1,4 +1,3 @@
-angular.module('llApp', []);
 (function(angular){
 "use strict";
 
