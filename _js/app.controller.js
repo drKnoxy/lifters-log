@@ -15,8 +15,20 @@ function AppCtrl(routine531, records) {
 
     vm.currentCycle = 0;
 
-    vm.calcWeight = function(weight, percentage) {
-        return isNaN(input) ? '-' : Math.round( input / 5 ) * 5;
+    vm.calcWeight = function(weight, percentage, cycle, increment) {
+        if (false === !!weight) {
+            return '-';
+        }
+
+        weight += (cycle * increment);
+        weight = weight * percentage;
+        weight = round5(weight);
+
+        return weight;
+
+        function round5(num) {
+            return isNaN(num) ? '-' : Math.round( num / 5 ) * 5;
+        }
     }
 }
 

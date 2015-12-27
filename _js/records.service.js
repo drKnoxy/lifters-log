@@ -11,6 +11,7 @@ angular.module('llApp')
 function records() {
     var lifts = [{
         label: 'Overhead Press',
+        increment: 5,
         reps: 2,
         weight: 115
     },{
@@ -20,6 +21,7 @@ function records() {
         weight: 285
     },{
         label: 'Bench Press',
+        increment: 5,
         reps: 1,
         weight: 185
     },{

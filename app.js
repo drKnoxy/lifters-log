@@ -20,8 +20,20 @@ function AppCtrl(routine531, records) {
 
     vm.currentCycle = 0;
 
-    vm.calcWeight = function(weight, percentage) {
-        return isNaN(input) ? '-' : Math.round( input / 5 ) * 5;
+    vm.calcWeight = function(weight, percentage, cycle, increment) {
+        if (false === !!weight) {
+            return '-';
+        }
+
+        weight += (cycle * increment);
+        weight = weight * percentage;
+        weight = round5(weight);
+
+        return weight;
+
+        function round5(num) {
+            return isNaN(num) ? '-' : Math.round( num / 5 ) * 5;
+        }
     }
 }
 
@@ -40,6 +52,7 @@ angular.module('llApp')
 function records() {
     var lifts = [{
         label: 'Overhead Press',
+        increment: 5,
         reps: 2,
         weight: 115
     },{
@@ -49,6 +62,7 @@ function records() {
         weight: 285
     },{
         label: 'Bench Press',
+        increment: 5,
         reps: 1,
         weight: 185
     },{

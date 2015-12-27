@@ -115,6 +115,8 @@
                             {{ $first ? 'Warm Up' : '5 / 3 / 1' }}
                         </th>
                         <td ng-repeat="record in app.records">
+                            {{ app.calcWeight(record.oneRepMax(), set.percentage, app.currentCycle, record.increment) }} x {{set.reps}}
+                            <br />
                             {{ record.oneRepMax() * set.percentage | round5 }} x {{set.reps}}
                         </td>
                     </tr>
