@@ -1,9 +1,9 @@
 <!doctype html>
-<html class="no-js" lang="" ng-app="llApp" ng-controller="AppCtrl as app">
+<html class="no-js" lang="en-us" ng-app="llApp" ng-controller="AppCtrl as app">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title></title>
+        <title>A Lifter's Log</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -17,11 +17,11 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <h2>Starting PRs</h2>
         <form name="recordForm"
             ng-submit="recordForm.$valid && app.updateRecords()">
-            <h2>Configuration</h2>
             <div class="row">
-                <div class="col-sm-6" ng-repeat="(key, record) in app.records">
+                <div class="col-sm-6" ng-repeat="record in app.records">
                     <div class="panel panel-default">
                         <div class="panel-heading">{{record.label}}</div>
                         <div class="panel-body">
@@ -31,7 +31,7 @@
                                         <label for="">Reps</label>
                                         <input class="form-control"
                                             id=""
-                                            type="text"
+                                            type="number"
                                             ng-model="record.reps"
                                             required />
                                     </div>
@@ -41,7 +41,7 @@
                                         <label for="">Weight</label>
                                         <input class="form-control"
                                             id=""
-                                            type="text"
+                                            type="number"
                                             ng-model="record.weight"
                                             required />
                                     </div>
@@ -53,13 +53,34 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit"
+                    class="btn btn-primary">
                     Save
                 </button>
             </div>
-            <pre>{{app.records |json}}</pre>
-            <hr />
+
         </form>
+        <!-- <pre>{{app.records |json}}</pre> -->
+        <!-- <div class="row">
+            <div class="col-sm-6">
+                <ul>
+                    <li ng-repeat="record in app.records">
+                        <strong>{{record.label}}:</strong>
+                        <span>{{record.reps}} x {{record.weight}}</span>
+                        <i ng-show="record.reps > 1">
+                            (1RM x {{record.oneRM | round5}})
+                        </i>
+                    </li>
+                    <li><a href="">edit</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div> -->
+
+
+        <hr />
 
         <h2>Lifting Routine</h2>
         <!-- <label>cycle:</label>
@@ -73,35 +94,47 @@
         </div> -->
 
         <div class="panel panel-default" ng-repeat="week in app.program">
-            <div class="panel-heading">Week {{ $index + 1 }}</div>
+            <div class="panel-heading">
+                <h4 class="panel-title">Week {{ $index + 1 }}</h4>
+            </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>Overhead Press</th>
-                        <th>Deadlift</th>
-                        <th>Bench Press</th>
-                        <th>Squat</th>
+                        <th class="hidden-xs">&nbsp;</th>
+                        <th ng-repeat="record in app.records">
+                            {{record.label}}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="set in week">
-                        <th rowspan="3" ng-if="$first || $index === 3">
+                    <tr ng-repeat="set in week"
+                        ng-class="{ 'active' : $last}">
+                        <th class="hidden-xs"
+                            rowspan="3"
+                            ng-if="$first || $index === 3">
                             {{ $first ? 'Warm Up' : '5 / 3 / 1' }}
                         </th>
-                        <td>wx{{set.percentage}} x {{set.reps}}</td>
-                        <td>wx{{set.percentage}} x {{set.reps}}</td>
-                        <td>wx{{set.percentage}} x {{set.reps}}</td>
-                        <td>wx{{set.percentage}} x {{set.reps}}</td>
+                        <td ng-repeat="record in app.records">
+                            {{ record.oneRepMax() * set.percentage | round5 }} x {{set.reps}}
+                        </td>
                     </tr>
                 </tbody>
                 <tbody>
                     <tr>
-                        <th rowspan="2">Accessory</th>
-                        <td>5 x 10 @ {{ .5 * 100}}</td>
-                        <td>5 x 10 @ {{ .5 * 100}}</td>
-                        <td>5 x 10 @ {{ .5 * 100}}</td>
-                        <td>5 x 10 @ {{ .5 * 100}}</td>
+                        <th class="hidden-xs"
+                            rowspan="2">
+                            Accessory
+                        </th>
+                        <td ng-repeat="record in app.records">
+                            5 x 10 @{{ record.oneRepMax() * .50 | round5 }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- th -->
+                        <td>Chin-ups - 5 x 10</td>
+                        <td>Hanging Leg Raise - 5 x 10</td>
+                        <td>Dumbbell Row - 5 x 10</td>
+                        <td>Leg Curl - 5 x 10</td>
                     </tr>
                 </tbody>
             </table>
