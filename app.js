@@ -20,21 +20,46 @@ function AppCtrl(routine531, records) {
 
     vm.currentCycle = 0;
 
-    vm.calcWeight = function(weight, percentage, cycle, increment) {
+    vm.calcWeight = calcWeight;
+
+    vm.showEditForm = false;
+
+    activate();
+
+    ///////////////////////////
+
+    function activate() {
+
+    }
+
+    /**
+     * [calcWeight description]
+     *
+     * @param  {int}   weight     [description]
+     * @param  {float} percentage [description]
+     * @param  {int}   cycle      [description]
+     * @param  {int}   increment  [description]
+     * @return {int}              [description]
+     */
+    function calcWeight(weight, percentage, cycle, increment) {
+        // Add an extra check for weight, because it is a user input,
+        // so it is very possible for it to be falsey
         if (false === !!weight) {
             return '-';
         }
 
-        weight += (cycle * increment);
-        weight = weight * percentage;
-        weight = round5(weight);
+        weight += (cycle * increment); // add to the weight based on cycle
+        weight *= percentage;          // modify the weight used based on the program
+        weight = round5(weight);       // round it
 
         return weight;
 
+        // Round to the nearest 5
         function round5(num) {
-            return isNaN(num) ? '-' : Math.round( num / 5 ) * 5;
+            return Math.round( num / 5 ) * 5;
         }
     }
+
 }
 
 })(angular);
