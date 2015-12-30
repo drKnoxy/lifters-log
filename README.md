@@ -7,4 +7,5 @@ An online calculator for wendler's 5/3/1 lifting method.
 * [ ] tracking: add ga code
 * [ ] social sharing widget
 * [ ] credits: humans.txt, readme, footer
-* [ ]
+* [ ] brainstorm: additional responsive tlc?
+
