@@ -130,7 +130,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <th class="hidden-xs">&nbsp;</th>
+                        <th class="hidden-sm-down">&nbsp;</th>
                         <th ng-repeat="record in app.records">
                             {{record.label}}
                         </th>
@@ -139,7 +139,7 @@
                 <tbody>
                     <tr ng-repeat="set in week"
                         ng-class="{ 'active' : $last}">
-                        <th class="hidden-xs row-label"
+                        <th class="hidden-sm-down row-label"
                             rowspan="3"
                             ng-if="$first || $index === 3">
                             {{ $first ? 'Warm Up' : '5 / 3 / 1' }}
@@ -155,20 +155,38 @@
                 </tbody>
                 <tbody>
                     <tr>
-                        <th class="hidden-xs"
+                        <th class="hidden-sm-down"
                             rowspan="2">
                             Accessory
                         </th>
                         <td ng-repeat="record in app.records">
-                            5 x 10 @{{ app.calcWeight(record.oneRepMax(), .50, app.currentCycle, record.increment) }}
+                            5 x 10
+                            <br class="visible-sm-down" />
+                            @{{ app.calcWeight(record.oneRepMax(), .50, app.currentCycle, record.increment) }}
                         </td>
                     </tr>
                     <tr>
                         <!-- th -->
-                        <td>Chin-ups - 5 x 10</td>
-                        <td>Hanging Leg Raise - 5 x 10</td>
-                        <td>Dumbbell Row - 5 x 10</td>
-                        <td>Leg Curl - 5 x 10</td>
+                        <td>
+                            Chin-ups <span class="hidden-sm-down">-</span>
+                            <br class="hidden-md-up" />
+                            5 x 10
+                        </td>
+                        <td>
+                            Hanging Leg Raise <span class="hidden-sm-down">-</span>
+                            <br class="hidden-md-up" />
+                            5 x 10
+                        </td>
+                        <td>
+                            Dumbbell Row <span class="hidden-sm-down">-</span>
+                            <br class="hidden-md-up" />
+                            5 x 10
+                        </td>
+                        <td>
+                            Leg Curl <span class="hidden-sm-down">-</span>
+                            <br class="hidden-md-up" />
+                            5 x 10
+                        </td>
                     </tr>
                 </tbody>
             </table>
