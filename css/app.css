@@ -533,6 +533,10 @@ body {
 .pull-right {
   float: right; }
 
+.header-buttons {
+  margin-top: 5px;
+  float: right; }
+
 .container {
   margin-left: auto;
   margin-right: auto;
