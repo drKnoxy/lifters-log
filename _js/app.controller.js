@@ -17,6 +17,7 @@ function AppCtrl(routine531, records) {
 
     vm.calcWeight = calcWeight;
 
+    // todo: add logic for initial showeditform
     vm.showEditForm = false;
 
     activate();
@@ -36,7 +37,7 @@ function AppCtrl(routine531, records) {
      * @param  {int}   increment  [description]
      * @return {int}              [description]
      */
-    function calcWeight(weight, percentage, cycle, increment) {
+    function _calcWeight(weight, percentage, cycle, increment) {
         // Add an extra check for weight, because it is a user input,
         // so it is very possible for it to be falsey
         if (false === !!weight) {
@@ -53,6 +54,10 @@ function AppCtrl(routine531, records) {
         function round5(num) {
             return Math.round( num / 5 ) * 5;
         }
+    }
+
+    function calcWeight(record, percentage) {
+        return _calcWeight(record.oneRepMax(), percentage, vm.currentCycle, )
     }
 
 }

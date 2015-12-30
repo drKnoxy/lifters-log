@@ -22,6 +22,7 @@ function AppCtrl(routine531, records) {
 
     vm.calcWeight = calcWeight;
 
+    // todo: add logic for initial showeditform
     vm.showEditForm = false;
 
     activate();
@@ -41,7 +42,7 @@ function AppCtrl(routine531, records) {
      * @param  {int}   increment  [description]
      * @return {int}              [description]
      */
-    function calcWeight(weight, percentage, cycle, increment) {
+    function _calcWeight(weight, percentage, cycle, increment) {
         // Add an extra check for weight, because it is a user input,
         // so it is very possible for it to be falsey
         if (false === !!weight) {
@@ -58,6 +59,10 @@ function AppCtrl(routine531, records) {
         function round5(num) {
             return Math.round( num / 5 ) * 5;
         }
+    }
+
+    function calcWeight(record, percentage) {
+        return _calcWeight(record.oneRepMax(), percentage, vm.currentCycle, )
     }
 
 }
@@ -77,29 +82,29 @@ angular.module('llApp')
 function records() {
     var lifts = [{
         label: 'Overhead Press',
-        increment: 5,
+        key: 'overheadPress',
         reps: 2,
         weight: 115
     },{
         label: 'Deadlift',
-        increment: 10,
+        key: 'deadlift',
         reps: 3,
         weight: 285
     },{
         label: 'Bench Press',
-        increment: 5,
+        key: 'benchPress',
         reps: 1,
         weight: 185
     },{
         label: 'Back Squat',
-        increment: 10,
+        key: 'backSquat',
         reps: 5,
         weight: 265
     }];
 
     function Record(options) {
         this.label = options.label || '';
-        this.increment = options.increment || 5;
+        this.key = options.key;
         this.reps = options.reps || undefined;
         this.weight = options.weight || undefined;
     }
@@ -107,12 +112,13 @@ function records() {
     // Epley Formula
     // https://en.wikipedia.org/wiki/One-repetition_maximum
     Record.prototype.oneRepMax = function() {
-        if (false === !!this.weight || false === !!this.reps) {
+        if (!this.weight || !this.reps) {
             return 0;
         }
 
         return this.weight * (1 + this.reps / 30);
     }
+
     function addNewRecord(options) {
         return new Record(options);
     }
@@ -151,7 +157,7 @@ angular.module('llApp')
 .factory('routine531', routine531);
 
 function routine531() {
-    var service = {
+    var weeks = {
         week1: [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
@@ -186,7 +192,14 @@ function routine531() {
         ],
     };
 
-    return service;
+    var lifts = {
+        overheadPress: { increment: 5 },
+        deadlift: { increment: 10 },
+        benchPress: { increment: 5 },
+        backSquat: { increment: 10 },
+    }
+
+    return {lifts: lifts, weeks: weeks};
 }
 
 })(angular);
