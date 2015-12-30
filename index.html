@@ -7,96 +7,118 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="bootstrap.css">
-        <link rel="stylesheet" href="app.css" />
+        <!-- <link rel="stylesheet" href="bootstrap.css"> -->
+
+        <link rel="stylesheet" href="/css/app.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="app.js"></script>
+        <!-- <script src="/js/lib.min.js"></script> -->
+        <script src="/js/app.js"></script>
     </head>
     <body class="container">
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <h2>Starting PRs</h2>
-        <form name="recordForm">
-            <div class="row">
-                <div class="col-sm-6" ng-repeat="record in app.records">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">{{record.label}}</div>
-                        <div class="panel-body">
+        <h2>
+            Starting PRs
+            <a class="small pull-right"
+                ng-hide="app.showEditForm"
+                ng-click="app.showEditForm = true">
+                edit
+            </a>
+        </h2>
+        <form name="recordForm"
+            ng-show="app.showEditForm">
+            <div class="card">
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-sm-6" ng-repeat="record in app.records">
+
+                            <h4>{{record.label}}</h4>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
+                                    <fieldset class="form-group">
                                         <label for="">Reps</label>
                                         <input class="form-control"
                                             id=""
                                             type="number"
                                             ng-model="record.reps"
                                             required />
-                                    </div>
+                                    </fieldset>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="form-group">
+                                    <fieldset class="form-group">
                                         <label for="">Weight</label>
                                         <input class="form-control"
                                             id=""
                                             type="number"
                                             ng-model="record.weight"
                                             required />
-                                    </div>
+                                    </fieldset>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <a class="btn btn-primary"
+                            ng-disabled="recordForm.$invalid"
+                            ng-click="app.showEditForm = false">
+                            <i class="fa fa-check"></i>
+                            Done
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <a class="btn btn-primary">
-                    Done
-                </a>
-            </div>
-
         </form>
+
         <!-- <pre>{{app.records |json}}</pre> -->
-        <!-- <div class="row">
-            <div class="col-sm-6">
-                <ul>
-                    <li ng-repeat="record in app.records">
-                        <strong>{{record.label}}:</strong>
-                        <span>{{record.reps}} x {{record.weight}}</span>
-                        <i ng-show="record.reps > 1">
-                            (1RM x {{record.oneRM | round5}})
-                        </i>
-                    </li>
-                    <li><a href="">edit</a></li>
-                </ul>
+
+        <div ng-hide="app.showEditForm">
+            <div class="row">
+                <div class="col-sm-6">
+                    <ul>
+                        <li>90% of your 1rm is used as a starting value</li>
+                        <li ng-repeat="record in app.records">
+                            <strong>{{record.label}}:</strong>
+                            <span>{{record.reps}} x {{record.weight}}</span>
+                            <i ng-show="record.reps > 1">
+                                (1RM x {{record.oneRepMax() | round5}})
+                            </i>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6"></div>
             </div>
-            <div class="col-sm-6">
-
-            </div>
-        </div> -->
-
-
-        <hr />
-
-        <h2>Lifting Routine</h2>
-        <label>cycle:</label>
-        <div class="btn-group">
-            <a ng-repeat="n in [1,2,3,4,5,6]"
-                ng-click="app.currentCycle = $index"
-                class="btn btn-default"
-                ng-class="{'active': $index == app.currentCycle}">
-                {{n}}
-            </a>
         </div>
 
-        <div class="panel panel-default" ng-repeat="week in app.program">
-            <div class="panel-heading">
-                <h4 class="panel-title">Week {{ $index + 1 }}</h4>
+        <hr class="m-y-2" />
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Lifting Routine</h2>
+
             </div>
+            <div class="col-sm-6">
+
+                <div class="form-group pull-right">
+                    <label>cycle:</label>
+                    <div class="btn-group">
+                        <a ng-repeat="cycle in [0,1,2,3,4,5]"
+                            ng-click="app.currentCycle = cycle"
+                            class="btn btn-secondary"
+                            ng-class="{active: (cycle == app.currentCycle)}">
+                            {{ cycle+1 }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-b-2" ng-repeat="week in app.program">
+            <h4>Week {{ $index + 1 }}</h4>
+
             <table class="table table-bordered">
-                <thead>
+                <thead class="">
                     <tr>
                         <th class="hidden-xs">&nbsp;</th>
                         <th ng-repeat="record in app.records">

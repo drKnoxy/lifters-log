@@ -1,14 +1,13 @@
-/**
- * app.js
- */
+// /Users/adam/code/lifters-log/_js/app.js
+(function(){
+"use strict";
 angular.module('llApp', []);
 
-/**
- * app.controller.js
- */
-(function(angular){
+})();
+ 
+// /Users/adam/code/lifters-log/_js/app.controller.js
+(function(){
 "use strict";
-
 angular.module('llApp')
 .controller('AppCtrl', AppCtrl);
 
@@ -62,14 +61,11 @@ function AppCtrl(routine531, records) {
 
 }
 
-})(angular);
-
-/**
- * records.service.js
- */
-(function(angular){
+})();
+ 
+// /Users/adam/code/lifters-log/_js/records.service.js
+(function(){
 "use strict";
-
 angular.module('llApp')
 
 .factory('records', records);
@@ -119,15 +115,11 @@ function records() {
 
     return lifts.map(addNewRecord);
 }
-
-})(angular);
-
-/**
- * round5.filter.js
- */
-(function(angular){
+})();
+ 
+// /Users/adam/code/lifters-log/_js/round5.filter.js
+(function(){
 "use strict";
-
 angular.module('llApp')
 
 .filter('round5', round5);
@@ -137,15 +129,11 @@ function round5() {
         return isNaN(input) ? '-' : Math.round( input / 5 ) * 5;
     }
 }
-
-})(angular);
-
-/**
- * routine531.service.js
- */
-(function(angular){
+})();
+ 
+// /Users/adam/code/lifters-log/_js/routine531.service.js
+(function(){
 "use strict";
-
 angular.module('llApp')
 
 .factory('routine531', routine531);
@@ -189,4 +177,5 @@ function routine531() {
     return service;
 }
 
-})(angular);
+})();
+ 

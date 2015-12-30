@@ -1,9 +1,3 @@
-/**
- * records.service.js
- */
-(function(angular){
-"use strict";
-
 angular.module('llApp')
 
 .factory('records', records);
@@ -53,5 +47,3 @@ function records() {
 
     return lifts.map(addNewRecord);
 }
-
-})(angular);

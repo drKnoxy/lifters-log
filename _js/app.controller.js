@@ -1,9 +1,3 @@
-/**
- * app.controller.js
- */
-(function(angular){
-"use strict";
-
 angular.module('llApp')
 .controller('AppCtrl', AppCtrl);
 
@@ -56,5 +50,3 @@ function AppCtrl(routine531, records) {
     }
 
 }
-
-})(angular);

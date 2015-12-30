@@ -1,9 +1,3 @@
-/**
- * routine531.service.js
- */
-(function(angular){
-"use strict";
-
 angular.module('llApp')
 
 .factory('routine531', routine531);
@@ -46,5 +40,3 @@ function routine531() {
 
     return service;
 }
-
-})(angular);
