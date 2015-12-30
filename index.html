@@ -19,9 +19,9 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <h2>
+        <h2 class="display-2">
             Starting PRs
-            <a class="small pull-right"
+            <a class="btn btn-secondary btn-sm pull-right"
                 ng-hide="app.showEditForm"
                 ng-click="app.showEditForm = true">
                 edit
@@ -59,43 +59,36 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <a class="btn btn-primary"
-                            ng-disabled="recordForm.$invalid"
-                            ng-click="app.showEditForm = false">
-                            <i class="fa fa-check"></i>
-                            Done
-                        </a>
-                    </div>
+
+                    <a class="btn btn-primary"
+                        ng-disabled="recordForm.$invalid"
+                        ng-click="app.showEditForm = false">
+                        <i class="fa fa-check"></i>
+                        Done
+                    </a>
+
                 </div>
             </div>
         </form>
 
-        <!-- <pre>{{app.records |json}}</pre> -->
-
         <div ng-hide="app.showEditForm">
-            <div class="row">
-                <div class="col-sm-6">
-                    <ul>
-                        <li>90% of your 1rm is used as a starting value</li>
-                        <li ng-repeat="record in app.records">
-                            <strong>{{record.label}}:</strong>
-                            <span>{{record.reps}} x {{record.weight}}</span>
-                            <i ng-show="record.reps > 1">
-                                (1RM x {{record.oneRepMax() | round5}})
-                            </i>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-6"></div>
-            </div>
+            <ul>
+                <li ng-repeat="record in app.records">
+                    <strong>{{record.label}}:</strong>
+                    <span>{{record.reps}} x {{record.weight}}</span>
+                    <i ng-show="record.reps > 1">
+                        (1RM x {{record.oneRepMax() | round5}})
+                    </i>
+                </li>
+                <li>90% of your 1rm is used as the base for calculations.</li>
+            </ul>
         </div>
 
-        <hr class="m-y-2" />
+        <hr class="m-y-1" />
 
         <div class="row">
             <div class="col-sm-6">
-                <h2>Lifting Routine</h2>
+                <h2 class="display-2">Lifting Routine</h2>
 
             </div>
             <div class="col-sm-6">
@@ -115,10 +108,15 @@
         </div>
 
         <div class="m-b-2" ng-repeat="week in app.program">
-            <h4>Week {{ $index + 1 }}</h4>
 
-            <table class="table table-bordered">
-                <thead class="">
+            <table class="table table-bordered table-program">
+                <thead>
+                    <tr>
+                        <th colspan="99"
+                            class="table-header">
+                            Week {{ $index + 1 }}
+                        </th>
+                    </tr>
                     <tr>
                         <th class="hidden-xs">&nbsp;</th>
                         <th ng-repeat="record in app.records">

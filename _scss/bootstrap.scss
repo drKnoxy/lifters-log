@@ -57,7 +57,7 @@ $enable-grid-classes:       true !default;
 // Control the default styling of most Bootstrap elements by modifying these
 // variables. Mostly focused on spacing.
 
-$spacer:                     1rem !default;
+$spacer:                     2.5rem !default;
 $spacer-x:                   $spacer !default;
 $spacer-y:                   $spacer !default;
 $spacers: (
@@ -85,7 +85,7 @@ $border-width:               1px !default;
 //
 // Settings for the `<body>` element.
 
-$body-bg:                    #fff;
+$body-bg:                    #fcfcfc;
 $body-color:                 $gray;
 
 
@@ -163,9 +163,9 @@ $font-size-h5:               1.4rem !default;
 $font-size-h6:               1.2rem !default;
 
 $display1-size:               6rem !default;
-$display2-size:               5.5rem !default;
-$display3-size:               4.5rem !default;
-$display4-size:               3.5rem !default;
+$display2-size:               3.5rem !default;
+$display3-size:               3.2rem !default;
+$display4-size:               3rem !default;
 
 $display1-weight:             300 !default;
 $display2-weight:             300 !default;
@@ -226,7 +226,7 @@ $caret-width-lg:         $caret-width !default;
 $table-cell-padding:            .8rem !default;
 $table-sm-cell-padding:         .5rem !default;
 
-$table-bg:                      transparent !default;
+$table-bg:                      #fff;
 $table-bg-accent:               #f9f9f9 !default;
 $table-bg-hover:                #f5f5f5 !default;
 $table-bg-active:               $table-bg-hover !default;

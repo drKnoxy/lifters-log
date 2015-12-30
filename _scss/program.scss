@@ -1,5 +1,16 @@
 
-.table tbody tr > th {
-    vertical-align: middle;
+.table-header {
     text-align: center;
+    border-bottom-width: 1px;
+    background-color: #f7f7f7;
+}
+.table-program {
+    td,th {
+        text-align: center;
+    }
+    // left headers should be centered nicely
+    tbody tr > th {
+        vertical-align: middle;
+        text-align: center;
+    }
 }
