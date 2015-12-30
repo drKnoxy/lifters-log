@@ -1,7 +1,6 @@
 var gulp = require('gulp');
-var $ = require('gulp-load-plugins')({
-    lazy: true
-});
+var del = require('del');
+var $ = require('gulp-load-plugins')({lazy: true});
 
 var config = {
     build: {
@@ -23,41 +22,31 @@ var config = {
     }
 };
 
-/**
- *
- */
 gulp.task('help', $.taskListing.withFilters(null, 'default'));
 gulp.task('default', ['help']);
 
-/**
- * Remove all build / temp files
- */
+gulp.task('serve', ['clean', 'compile', 'watch']);
+
+///////////////////////////////////////////////////////////
+
 gulp.task('clean', function(done) {
-    // del([config.build], done);
+    del([config.build], done);
 });
 
-/**
- *
- */
 gulp.task('watch', function() {
     gulp.watch(config.lib_scripts, ['compile_lib-scripts']);
     gulp.watch(config.app_scripts, ['compile_app-scripts']);
     gulp.watch(config.styles.all, ['compile_styles']);
 });
 
-/**
- * Run all compiling tasks
- */
+// All Compiling
 gulp.task('compile', [
-    'compile_styles',
     // html
-    // scripts
+    'compile_styles',
     'compile_scripts',
 ]);
 
-/**
- *
- */
+// Compiling styles
 gulp.task('compile_styles', function() {
     return gulp.src(config.styles.root)
         .pipe($.sourcemaps.init())
@@ -66,21 +55,11 @@ gulp.task('compile_styles', function() {
         .pipe(gulp.dest(config.build.styles));
 });
 
-/**
- *
- */
+// Compiling scripts
 gulp.task('compile_scripts', ['compile_app-scripts', 'compile_lib-scripts']);
-
-/**
- *
- */
 gulp.task('compile_app-scripts', function() {
     return concatJS(config.app_scripts, 'app.js');
 });
-
-/**
- *
- */
 gulp.task('compile_lib-scripts', function() {
     return concatJS(config.lib_scripts, '/lib.min.js');
 });
