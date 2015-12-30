@@ -37,9 +37,10 @@ function AppCtrl(routine531, records) {
             return '-';
         }
 
-        weight += (cycle * increment); // add to the weight based on cycle
-        weight *= percentage;          // modify the weight used based on the program
-        weight = round5(weight);       // round it
+        weight *= .9;                   // start with 90% of the recorded 1rm
+        weight += (cycle * increment);  // add to the weight based on cycle
+        weight *= percentage;           // modify the weight used based on the program
+        weight = round5(weight);        // round it
 
         return weight;
 
