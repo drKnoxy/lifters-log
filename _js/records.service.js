@@ -17,7 +17,7 @@ function records() {
         label: 'Bench Press',
         increment: 5,
         reps: 1,
-        weight: 185
+        weight: 180
     },{
         label: 'Back Squat',
         increment: 10,
