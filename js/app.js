@@ -1,35 +1,57 @@
-// /Users/adam/code/lifters-log/_js/app.js
+// /Users/awknox/code/lifters-log/_js/app.js
 (function(){
 "use strict";
-angular.module('llApp', []);
+angular.module('llApp', ['ngStorage']);
 
 })();
  
-// /Users/adam/code/lifters-log/_js/app.controller.js
+// /Users/awknox/code/lifters-log/_js/app.controller.js
 (function(){
 "use strict";
 angular.module('llApp')
 .controller('AppCtrl', AppCtrl);
 
-function AppCtrl(routine531, records) {
+function AppCtrl(routine531, $localStorage) {
     var vm = this;
 
     vm.program = routine531;
-    vm.records = records;
-
-    vm.currentCycle = 0;
-
-    vm.calcWeight = calcWeight;
-
+    vm.getSets = function() {
+        return vm.program[vm.$storage.currentWeek];
+    }
+    vm.$storage = $localStorage.$default({
+        records: [{
+            label: 'Overhead Press',
+            increment: 5,
+            reps: 2,
+            weight: 115
+        },{
+            label: 'Deadlift',
+            increment: 10,
+            reps: 3,
+            weight: 285
+        },{
+            label: 'Bench Press',
+            increment: 5,
+            reps: 1,
+            weight: 180
+        },{
+            label: 'Back Squat',
+            increment: 10,
+            reps: 5,
+            weight: 265
+        }],
+        currentCycle: 0,
+        currentWeek: 0,
+    });
     vm.showEditForm = false;
+    vm.calcWeight = calcWeight;
+    vm.oneRepMax = oneRepMax;
 
     activate();
 
     ///////////////////////////
 
-    function activate() {
-
-    }
+    function activate() {}
 
     /**
      * [calcWeight description]
@@ -60,65 +82,24 @@ function AppCtrl(routine531, records) {
         }
     }
 
-}
-
-})();
- 
-// /Users/adam/code/lifters-log/_js/records.service.js
-(function(){
-"use strict";
-angular.module('llApp')
-
-.factory('records', records);
-
-function records() {
-    var lifts = [{
-        label: 'Overhead Press',
-        increment: 5,
-        reps: 2,
-        weight: 115
-    },{
-        label: 'Deadlift',
-        increment: 10,
-        reps: 3,
-        weight: 285
-    },{
-        label: 'Bench Press',
-        increment: 5,
-        reps: 1,
-        weight: 180
-    },{
-        label: 'Back Squat',
-        increment: 10,
-        reps: 5,
-        weight: 265
-    }];
-
-    function Record(options) {
-        this.label = options.label || '';
-        this.increment = options.increment || 5;
-        this.reps = options.reps || undefined;
-        this.weight = options.weight || undefined;
-    }
-
-    // Epley Formula
-    // https://en.wikipedia.org/wiki/One-repetition_maximum
-    Record.prototype.oneRepMax = function() {
-        if (false === !!this.weight || false === !!this.reps) {
+    /**
+     * Epley Formula for One rep max 
+     * https://en.wikipedia.org/wiki/One-repetition_maximum
+     * @param {{weight: number, reps: number}}
+     */
+    function oneRepMax(r) {
+        if (false === !!r.weight || false === !!r.reps) {
             return 0;
         }
 
-        return this.weight * (1 + this.reps / 30);
-    }
-    function addNewRecord(options) {
-        return new Record(options);
+        return r.weight * (1 + r.reps / 30);
     }
 
-    return lifts.map(addNewRecord);
 }
+
 })();
  
-// /Users/adam/code/lifters-log/_js/round5.filter.js
+// /Users/awknox/code/lifters-log/_js/round5.filter.js
 (function(){
 "use strict";
 angular.module('llApp')
@@ -132,7 +113,7 @@ function round5() {
 }
 })();
  
-// /Users/adam/code/lifters-log/_js/routine531.service.js
+// /Users/awknox/code/lifters-log/_js/routine531.service.js
 (function(){
 "use strict";
 angular.module('llApp')
@@ -140,8 +121,8 @@ angular.module('llApp')
 .factory('routine531', routine531);
 
 function routine531() {
-    var service = {
-        week1: [
+    var service = [
+        [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
             { reps: '3',  percentage: .60 },
@@ -149,7 +130,7 @@ function routine531() {
             { reps: '5',  percentage: .75 },
             { reps: '5+', percentage: .85 },
         ],
-        week2: [
+        [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
             { reps: '3',  percentage: .60 },
@@ -157,7 +138,7 @@ function routine531() {
             { reps: '3',  percentage: .80 },
             { reps: '3+', percentage: .90 },
         ],
-        week3: [
+        [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
             { reps: '3',  percentage: .60 },
@@ -165,7 +146,7 @@ function routine531() {
             { reps: '3',  percentage: .85 },
             { reps: '1+', percentage: .95 },
         ],
-        week4: [
+        [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
             { reps: '3',  percentage: .60 },
@@ -173,7 +154,7 @@ function routine531() {
             { reps: '5',  percentage: .50 },
             { reps: '5+', percentage: .60 },
         ],
-    };
+    ];
 
     return service;
 }

@@ -30,5 +30,8 @@
     "gulp-task-listing": "^1.0.1",
     "gulp-util": "^3.0.7",
     "gulp-wrap": "^0.11.0"
+  },
+  "dependencies": {
+    "ngstorage": "^0.3.11"
   }
 }

@@ -1,1 +1,1 @@
-angular.module('llApp', []);
+angular.module('llApp', ['ngStorage']);

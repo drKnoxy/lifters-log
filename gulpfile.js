@@ -25,7 +25,7 @@ var config = {
 gulp.task('help', $.taskListing.withFilters(null, 'default'));
 gulp.task('default', ['help']);
 
-gulp.task('serve', ['clean', 'compile', 'watch']);
+gulp.task('serve', ['compile', 'watch']);
 
 ///////////////////////////////////////////////////////////
 

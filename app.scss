@@ -1,27 +1,3 @@
-// Core variables and mixins
-@import "_scss/bootstrap";
-@import "bower_components/bootstrap/scss/mixins";
-
-// Reset and dependencies
-@import "bower_components/bootstrap/scss/normalize";
-@import "bower_components/bootstrap/scss/type";
-@import "bower_components/bootstrap/scss/print";
-
-// Core CSS
-@import "bower_components/bootstrap/scss/reboot";
 @import "_scss/general";
-@import "bower_components/bootstrap/scss/grid";
-@import "bower_components/bootstrap/scss/tables";
-@import "bower_components/bootstrap/scss/forms";
 @import "_scss/forms";
-@import "_scss/buttons";
-
-// Components
-@import "bower_components/bootstrap/scss/button-group";
-@import "bower_components/bootstrap/scss/card";
 @import "_scss/program";
-
-// Utility classes
-@import "bower_components/bootstrap/scss/utilities";
-@import "bower_components/bootstrap/scss/utilities-spacing";
-@import "bower_components/bootstrap/scss/utilities-responsive";

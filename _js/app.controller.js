@@ -1,25 +1,47 @@
 angular.module('llApp')
 .controller('AppCtrl', AppCtrl);
 
-function AppCtrl(routine531, records) {
+function AppCtrl(routine531, $localStorage) {
     var vm = this;
 
     vm.program = routine531;
-    vm.records = records;
-
-    vm.currentCycle = 0;
-
-    vm.calcWeight = calcWeight;
-
+    vm.getSets = function() {
+        return vm.program[vm.$storage.currentWeek];
+    }
+    vm.$storage = $localStorage.$default({
+        records: [{
+            label: 'Overhead Press',
+            increment: 5,
+            reps: 2,
+            weight: 115
+        },{
+            label: 'Deadlift',
+            increment: 10,
+            reps: 3,
+            weight: 285
+        },{
+            label: 'Bench Press',
+            increment: 5,
+            reps: 1,
+            weight: 180
+        },{
+            label: 'Back Squat',
+            increment: 10,
+            reps: 5,
+            weight: 265
+        }],
+        currentCycle: 0,
+        currentWeek: 0,
+    });
     vm.showEditForm = false;
+    vm.calcWeight = calcWeight;
+    vm.oneRepMax = oneRepMax;
 
     activate();
 
     ///////////////////////////
 
-    function activate() {
-
-    }
+    function activate() {}
 
     /**
      * [calcWeight description]
@@ -48,6 +70,19 @@ function AppCtrl(routine531, records) {
         function round5(num) {
             return Math.round( num / 5 ) * 5;
         }
+    }
+
+    /**
+     * Epley Formula for One rep max 
+     * https://en.wikipedia.org/wiki/One-repetition_maximum
+     * @param {{weight: number, reps: number}}
+     */
+    function oneRepMax(r) {
+        if (false === !!r.weight || false === !!r.reps) {
+            return 0;
+        }
+
+        return r.weight * (1 + r.reps / 30);
     }
 
 }

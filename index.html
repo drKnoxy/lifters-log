@@ -10,8 +10,11 @@
 
         <!-- <link rel="stylesheet" href="bootstrap.css"> -->
 
+        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
         <link rel="stylesheet" href="./css/app.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+
         <!-- <script src="./js/lib.min.js"></script> -->
         <script src="./js/app.js"></script>
     </head>
@@ -19,13 +22,6 @@
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
-        <div class="welcome">
-            <h1>Online 5/3/1 Calculator</h1>
-            <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
-
-            <hr />
-        </div>
 
         <div>
             <div class="header-buttons">
@@ -38,66 +34,77 @@
                     print
                 </a> -->
             </div>
-            <h2 class="display-2">
-                Starting PRs
-            </h2>
-        </div>
 
-        <form name="recordForm"
-            ng-show="app.showEditForm">
-            <div class="card">
-                <div class="card-block">
-                    <div class="row">
-                        <div class="col-sm-6" ng-repeat="record in app.records">
+            <div class="row">
+                <div class="col-xs-12 col-lg-6">
+                    <h1>Online 5/3/1 Calculator</h1>
+                    <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
+                </div>
+                <div class="col-xs-12 col-lg-6">
+                    <h2>Starting PRs</h2>
+                    <form name="recordForm"
+                        ng-show="app.showEditForm">
+                        <div class="card">
+                            <div class="card-block">
+                                <div ng-repeat="record in app.$storage.records">
+                                    <div class="form-inline">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label>{{record.label}}</label>
+                                            </div>
+                                            
+                                            <div class="col-sm-9">
+                                                <fieldset class="form-group">
+                                                    <label class="visible-xs">Reps</label>
+                                                    <input class="form-control"
+                                                        id=""
+                                                        type="number"
+                                                        ng-model="record.reps"
+                                                        required />
+                                                </fieldset>
+                                                <p class="form-control-static hidden-xs">x</p>
+                                                <fieldset class="form-group">
+                                                    <label class="visible-xs">Weight</label>
+                                                    <div class="input-group">
+                                                        <input class="form-control"
+                                                            id=""
+                                                            type="number"
+                                                            ng-model="record.weight"
+                                                            required />
+                                                        <div class="input-group-addon">
+                                                            lbs
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <h4>{{record.label}}</h4>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <fieldset class="form-group">
-                                        <label for="">Reps</label>
-                                        <input class="form-control"
-                                            id=""
-                                            type="number"
-                                            ng-model="record.reps"
-                                            required />
-                                    </fieldset>
-                                </div>
-                                <div class="col-sm-6">
-                                    <fieldset class="form-group">
-                                        <label for="">Weight</label>
-                                        <input class="form-control"
-                                            id=""
-                                            type="number"
-                                            ng-model="record.weight"
-                                            required />
-                                    </fieldset>
-                                </div>
+                                <a class="btn btn-primary"
+                                    ng-disabled="recordForm.$invalid"
+                                    ng-click="app.showEditForm = false">
+                                    <i class="fa fa-check"></i>
+                                    Done
+                                </a>
+
                             </div>
                         </div>
+                    </form>
+                    <div ng-hide="app.showEditForm">
+                        <ul>
+                            <li ng-repeat="record in app.$storage.records">
+                                <strong>{{record.label}}:</strong>
+                                <span>{{record.reps}} x {{record.weight}}</span>
+                                <i ng-show="record.reps > 1">
+                                    (1RM x {{app.oneRepMax(record) | round5}})
+                                </i>
+                            </li>
+                            <li>90% of your 1rm is used as the base for calculations.</li>
+                        </ul>
                     </div>
-
-                    <a class="btn btn-primary"
-                        ng-disabled="recordForm.$invalid"
-                        ng-click="app.showEditForm = false">
-                        <i class="fa fa-check"></i>
-                        Done
-                    </a>
-
                 </div>
             </div>
-        </form>
-
-        <div ng-hide="app.showEditForm">
-            <ul>
-                <li ng-repeat="record in app.records">
-                    <strong>{{record.label}}:</strong>
-                    <span>{{record.reps}} x {{record.weight}}</span>
-                    <i ng-show="record.reps > 1">
-                        (1RM x {{record.oneRepMax() | round5}})
-                    </i>
-                </li>
-                <li>90% of your 1rm is used as the base for calculations.</li>
-            </ul>
         </div>
 
         <hr class="m-y-1" />
@@ -107,10 +114,21 @@
                 <label>cycle:</label>
                 <div class="btn-group">
                     <a ng-repeat="cycle in [0,1,2,3,4,5]"
-                        ng-click="app.currentCycle = cycle"
+                        ng-click="app.$storage.currentCycle = cycle"
                         class="btn btn-secondary"
-                        ng-class="{active: (cycle == app.currentCycle)}">
+                        ng-class="{active: (cycle == app.$storage.currentCycle)}">
                         {{ cycle+1 }}
+                    </a>
+                </div>
+            </div>
+            <div class="header-buttons" style="clear:both;margin-bottom: 4px;">
+                <label>week:</label>
+                <div class="btn-group">
+                    <a ng-repeat="week in [0,1,2,3]"
+                        ng-click="app.$storage.currentWeek = week"
+                        class="btn btn-secondary"
+                        ng-class="{active: (week == app.$storage.currentWeek)}">
+                        {{ week+1 }}
                     </a>
                 </div>
             </div>
@@ -118,35 +136,33 @@
             <h2 class="display-2">Lifting Routine</h2>
         </div>
 
-        <div ng-repeat="week in app.program"
-            class="m-b-1">
-
+        <div class="m-b-1">
             <table class="table table-bordered table-program">
                 <thead>
                     <tr>
                         <th colspan="99"
                             class="table-header">
-                            Week {{ $index + 1 }} / Cycle {{ app.currentCycle + 1 }}
+                            Week {{ app.$storage.currentWeek + 1 }} / Cycle {{ app.$storage.currentCycle + 1 }}
                         </th>
                     </tr>
                     <tr>
                         <th class="hidden-sm-down">&nbsp;</th>
-                        <th ng-repeat="record in app.records">
+                        <th ng-repeat="record in app.$storage.records">
                             {{record.label}}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="set in week"
+                    <tr ng-repeat="set in app.getSets()"
                         ng-class="{ 'active' : $last}">
                         <th class="hidden-sm-down row-label"
                             rowspan="3"
                             ng-if="$first || $index === 3">
                             {{ $first ? 'Warm Up' : '5 / 3 / 1' }}
                         </th>
-                        <td ng-repeat="record in app.records">
+                        <td ng-repeat="record in app.$storage.records">
                             <span class="calculated-weight">
-                                {{ app.calcWeight(record.oneRepMax(), set.percentage, app.currentCycle, record.increment) }}
+                                {{ app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment) }}
                             </span>
                             <span class="separator--weight-and-reps">x</span>
                             <span class="reps">{{set.reps}}</span>
@@ -159,10 +175,10 @@
                             rowspan="2">
                             Accessory
                         </th>
-                        <td ng-repeat="record in app.records">
+                        <td ng-repeat="record in app.$storage.records">
                             5 x 10
                             <br class="visible-sm-down" />
-                            @{{ app.calcWeight(record.oneRepMax(), .50, app.currentCycle, record.increment) }}
+                            @{{ app.calcWeight(app.oneRepMax(record), .50, app.$storage.currentCycle, record.increment) }}
                         </td>
                     </tr>
                     <tr>
