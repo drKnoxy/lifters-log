@@ -10,7 +10,7 @@
 
         <!-- <link rel="stylesheet" href="bootstrap.css"> -->
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" integrity="sha384-gv0oNvwnqzF6ULI9TVsSmnULNb3zasNysvWwfT/s4l8k5I+g6oFz9dye0wg3rQ2Q" crossorigin="anonymous">
         <link rel="stylesheet" href="./css/app.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
@@ -24,24 +24,20 @@
         <![endif]-->
 
         <div>
-            <div class="header-buttons">
-                <a class="btn btn-default btn-sm"
-                    ng-hide="app.showEditForm"
-                    ng-click="app.showEditForm = true">
-                    edit
-                </a>
-                <!-- <a class="btn btn-default btn-sm">
-                    print
-                </a> -->
-            </div>
-
             <div class="row">
                 <div class="col-xs-12 col-lg-6">
                     <h1>Online 5/3/1 Calculator</h1>
                     <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
                 </div>
                 <div class="col-xs-12 col-lg-6">
-                    <h2>Starting PRs</h2>
+                    <h2>
+                        Starting PRs
+                        <a class="btn btn-default btn-sm"
+                            ng-hide="app.showEditForm"
+                            ng-click="app.showEditForm = true">
+                            edit
+                        </a>
+                    </h2>
                     <form name="recordForm"
                         ng-show="app.showEditForm">
                         <div class="card">
@@ -50,7 +46,8 @@
                                     <div class="form-inline">
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <label>{{record.label}}</label>
+                                                <label class="hidden-xs">{{record.label}}</label>
+                                                <h4 class="visible-xs">{{record.label}}</h4>
                                             </div>
 
                                             <div class="col-sm-9">
