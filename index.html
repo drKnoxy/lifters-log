@@ -25,12 +25,12 @@
 
         <div>
             <div class="header-buttons">
-                <a class="btn btn-secondary btn-sm"
+                <a class="btn btn-default btn-sm"
                     ng-hide="app.showEditForm"
                     ng-click="app.showEditForm = true">
                     edit
                 </a>
-                <!-- <a class="btn btn-secondary btn-sm">
+                <!-- <a class="btn btn-default btn-sm">
                     print
                 </a> -->
             </div>
@@ -52,7 +52,7 @@
                                             <div class="col-sm-3">
                                                 <label>{{record.label}}</label>
                                             </div>
-                                            
+
                                             <div class="col-sm-9">
                                                 <fieldset class="form-group">
                                                     <label class="visible-xs">Reps</label>
@@ -115,7 +115,7 @@
                 <div class="btn-group">
                     <a ng-repeat="cycle in [0,1,2,3,4,5]"
                         ng-click="app.$storage.currentCycle = cycle"
-                        class="btn btn-secondary"
+                        class="btn btn-default"
                         ng-class="{active: (cycle == app.$storage.currentCycle)}">
                         {{ cycle+1 }}
                     </a>
@@ -126,7 +126,7 @@
                 <div class="btn-group">
                     <a ng-repeat="week in [0,1,2,3]"
                         ng-click="app.$storage.currentWeek = week"
-                        class="btn btn-secondary"
+                        class="btn btn-default"
                         ng-class="{active: (week == app.$storage.currentWeek)}">
                         {{ week+1 }}
                     </a>
@@ -218,10 +218,10 @@
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        
+
           ga('create', 'UA-28363782-1', 'auto');
           ga('send', 'pageview');
-        
+
         </script>
     </body>
 </html>
