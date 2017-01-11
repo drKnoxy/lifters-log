@@ -5,8 +5,8 @@ function AppCtrl(routine531, $localStorage) {
     var vm = this;
 
     vm.program = routine531;
-    vm.getSets = function() {
-        return vm.program[vm.$storage.currentWeek];
+    vm.getSets = function(week) {
+        return vm.program[week];
     }
     vm.$storage = $localStorage.$default({
         records: [{
@@ -73,7 +73,7 @@ function AppCtrl(routine531, $localStorage) {
     }
 
     /**
-     * Epley Formula for One rep max 
+     * Epley Formula for One rep max
      * https://en.wikipedia.org/wiki/One-repetition_maximum
      * @param {{weight: number, reps: number}}
      */

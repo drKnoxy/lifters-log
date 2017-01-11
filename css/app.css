@@ -14,6 +14,10 @@ body {
 .text-center {
   text-align: center; }
 
+@media print {
+  .hidden-print {
+    display: none; } }
+
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -27,11 +31,19 @@ input[type=number] {
   border-bottom-width: 1px;
   background-color: #f7f7f7; }
 
-.table-program td, .table-program th {
-  text-align: center; }
-
-.table-program tbody tr > th {
-  vertical-align: middle;
-  text-align: center; }
+.table-program {
+  display: none; }
+  .table-program.active {
+    display: table; }
+  @media print {
+    .table-program {
+      display: table; }
+      .table-program:nth-child(3n) {
+        page-break-before: always; } }
+  .table-program td, .table-program th {
+    text-align: center; }
+  .table-program tbody tr > th {
+    vertical-align: middle;
+    text-align: center; }
 
 /*# sourceMappingURL=maps/app.css.map */

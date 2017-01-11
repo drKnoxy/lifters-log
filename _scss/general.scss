@@ -17,3 +17,9 @@ body {
 .text-center {
     text-align: center;
 }
+
+@media print {
+    .hidden-print {
+        display: none;
+    }
+}

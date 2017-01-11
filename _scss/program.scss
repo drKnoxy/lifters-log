@@ -5,6 +5,17 @@
     background-color: #f7f7f7;
 }
 .table-program {
+    display: none;
+    &.active {
+        display: table;
+    }
+    @media print {
+        display: table;
+        &:nth-child(3n) {
+            page-break-before: always
+        }
+    }
+
     td,th {
         text-align: center;
     }

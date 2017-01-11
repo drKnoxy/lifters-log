@@ -15,8 +15,8 @@ function AppCtrl(routine531, $localStorage) {
     var vm = this;
 
     vm.program = routine531;
-    vm.getSets = function() {
-        return vm.program[vm.$storage.currentWeek];
+    vm.getSets = function(week) {
+        return vm.program[week];
     }
     vm.$storage = $localStorage.$default({
         records: [{
@@ -83,7 +83,7 @@ function AppCtrl(routine531, $localStorage) {
     }
 
     /**
-     * Epley Formula for One rep max 
+     * Epley Formula for One rep max
      * https://en.wikipedia.org/wiki/One-repetition_maximum
      * @param {{weight: number, reps: number}}
      */
@@ -125,7 +125,7 @@ function routine531() {
         [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
-            { reps: '3',  percentage: .60 },
+            { reps: '5',  percentage: .60 },
             { reps: '5',  percentage: .65 },
             { reps: '5',  percentage: .75 },
             { reps: '5+', percentage: .85 },
@@ -141,7 +141,7 @@ function routine531() {
         [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
-            { reps: '3',  percentage: .60 },
+            { reps: '5',  percentage: .60 },
             { reps: '5',  percentage: .75 },
             { reps: '3',  percentage: .85 },
             { reps: '1+', percentage: .95 },
@@ -149,9 +149,7 @@ function routine531() {
         [
             { reps: '5',  percentage: .40 },
             { reps: '5',  percentage: .50 },
-            { reps: '3',  percentage: .60 },
-            { reps: '5',  percentage: .40 },
-            { reps: '5',  percentage: .50 },
+            { reps: '5', percentage: .60 },
             { reps: '5+', percentage: .60 },
         ],
     ];
