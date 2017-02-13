@@ -133,7 +133,7 @@
             <h2 class="display-2">Lifting Routine</h2>
         </div>
 
-        <div class="m-b-1">
+        <div class="m-b-1 xs-expand">
             <table class="table table-bordered table-program"
                 ng-repeat="week in [0,1,2,3]"
                 ng-class="{active: week == app.$storage.currentWeek}">
@@ -159,7 +159,7 @@
                             ng-if="$first || $index === 3">
                             {{ ($first) ? 'Warm Up' : 'Active' }}
                         </th>
-                        <td ng-repeat="record in app.$storage.records">
+                        <td ng-repeat="record in app.$storage.records" class="nowrap">
                             <span class="calculated-weight">
                                 {{ app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment) }}
                             </span>

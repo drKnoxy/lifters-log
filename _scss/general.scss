@@ -23,3 +23,13 @@ body {
         display: none;
     }
 }
+
+.nowrap {
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .xs-expand {
+        margin: 0 -15px;
+    }
+}

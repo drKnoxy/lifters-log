@@ -19,9 +19,9 @@
     td,th {
         text-align: center;
     }
-    // left headers should be centered nicely
-    tbody tr > th {
+    th,
+    thead > tr > th {
         vertical-align: middle;
-        text-align: center;
+        line-height: 1;
     }
 }

@@ -18,6 +18,13 @@ body {
   .hidden-print {
     display: none; } }
 
+.nowrap {
+  white-space: nowrap; }
+
+@media (max-width: 767px) {
+  .xs-expand {
+    margin: 0 -15px; } }
+
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -42,8 +49,9 @@ input[type=number] {
         page-break-before: always; } }
   .table-program td, .table-program th {
     text-align: center; }
-  .table-program tbody tr > th {
+  .table-program th,
+  .table-program thead > tr > th {
     vertical-align: middle;
-    text-align: center; }
+    line-height: 1; }
 
 /*# sourceMappingURL=maps/app.css.map */
