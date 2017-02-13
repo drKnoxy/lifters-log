@@ -46,6 +46,7 @@ function AppCtrl(routine531, $localStorage) {
     vm.showEditForm = false;
     vm.calcWeight = calcWeight;
     vm.oneRepMax = oneRepMax;
+    vm.getPlates = getPlates;
 
     activate();
 
@@ -93,6 +94,33 @@ function AppCtrl(routine531, $localStorage) {
         }
 
         return r.weight * (1 + r.reps / 30);
+    }
+
+    function getPlates(weight) {
+        var plates = weightOnBar({weight})
+        return plates.map(({plate, count}) => `${count} x ${plate}`);
+    }
+
+    /**
+     * Returns the weight on each side
+     * 
+     * @param {{weight: number, bar: number}}
+     * @return [{plate: number, count: number}]
+     */
+    function weightOnBar({ weight, bar = 45 }) {
+        var plates = weight - bar;
+        var platesPerSide = (plates / 2);
+        var out = [];
+
+        [45, 35, 25, 10, 5, 2.5].forEach(p => {
+            var count = Math.floor(platesPerSide / p);
+            if (count > 0) {
+                out.push({ plate: p, count });
+                platesPerSide -= count*p;
+            }
+        })
+        
+        return out;
     }
 
 }
