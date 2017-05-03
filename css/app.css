@@ -16,7 +16,12 @@ body {
 
 @media print {
   .hidden-print {
-    display: none; } }
+    display: none; }
+  .print-pipe {
+    border-right: 1px solid #ddd; }
+  .print-50 {
+    display: inline-block;
+    width: 49%; } }
 
 .nowrap {
   white-space: nowrap; }

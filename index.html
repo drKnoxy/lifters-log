@@ -41,7 +41,7 @@
                     <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
                 </div>
                 <div class="col-xs-12 col-lg-6">
-                    <h2>
+                    <h2 class="hidden-print">
                         Starting PRs
                         <a class="btn btn-default btn-sm"
                             ng-hide="app.showEditForm"
@@ -99,17 +99,15 @@
                             </div>
                         </div>
                     </form>
-                    <div ng-hide="app.showEditForm">
-                        <ul>
-                            <li ng-repeat="record in app.$storage.records">
-                                <strong>{{record.label}}:</strong>
-                                <span>{{record.reps}} x {{record.weight}}</span>
-                                <i ng-show="record.reps > 1">
-                                    (1RM x {{app.oneRepMax(record) | round5}})
-                                </i>
-                            </li>
-                            <li>90% of your 1rm is used as the base for calculations.</li>
-                        </ul>
+                    <div ng-hide="app.showEditForm" class="row">
+                        <div ng-repeat="record in app.$storage.records" class="col-xs-6 col-sm-12">
+                            <strong>{{record.label}}:</strong>
+                            <span>{{record.reps}} x {{record.weight}}</span>
+                            <i ng-show="record.reps > 1">
+                                (1RM x {{app.oneRepMax(record) | round5}})
+                            </i>
+                        </div>
+                        <div class="col-xs-12">90% of your 1rm is used as the base for calculations.</div>
                     </div>
                 </div>
             </div>
@@ -175,11 +173,15 @@
                             class="nowrap"
                             ng-click="app.isAlertVisible = true; app.alertMessages = app.getPlates(app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment))"
                         >
-                            <span class="calculated-weight">
-                                {{ app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment) }}
+                            <span ng-class="{'print-50': $parent.$last}">
+                                <span class="calculated-weight">
+                                    {{ app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment) }}
+                                </span>
+                                <span class="separator--weight-and-reps">x</span>
+                                <span class="reps">{{set.reps}}</span>
                             </span>
-                            <span class="separator--weight-and-reps">x</span>
-                            <span class="reps">{{set.reps}}</span>
+                            <span ng-if="$parent.$last" class="print-pipe"></span>
+                            <span ng-if="$parent.$last" class="print-50"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -191,30 +193,25 @@
                         </th>
                         <td ng-repeat="record in app.$storage.records">
                             5 x 10
-                            <br class="visible-sm-down" />
-                            @{{ app.calcWeight(app.oneRepMax(record), .50, app.$storage.currentCycle, record.increment) }}
+                            @{{ app.calcWeight(app.oneRepMax(record), .60, app.$storage.currentCycle, record.increment) }}
                         </td>
                     </tr>
                     <tr>
                         <!-- th -->
                         <td>
                             Chin-ups <span class="hidden-sm-down">-</span>
-                            <br class="hidden-md-up" />
                             5 x 10
                         </td>
                         <td>
                             Hanging Leg Raise <span class="hidden-sm-down">-</span>
-                            <br class="hidden-md-up" />
                             5 x 10
                         </td>
                         <td>
                             Dumbbell Row <span class="hidden-sm-down">-</span>
-                            <br class="hidden-md-up" />
                             5 x 10
                         </td>
                         <td>
                             Leg Curl <span class="hidden-sm-down">-</span>
-                            <br class="hidden-md-up" />
                             5 x 10
                         </td>
                     </tr>
