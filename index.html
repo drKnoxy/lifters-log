@@ -106,7 +106,7 @@
                         </div>
                     </form>
                     <div ng-hide="app.showEditForm" class="row">
-                        <div ng-repeat="record in app.$storage.records" class="col-xs-6 col-sm-12">
+                        <div ng-repeat="record in app.$storage.records" class="col-sm-12">
                             <strong>{{record.label}}:</strong>
                             <span>{{record.reps}} x {{record.weight}}</span>
                             <i ng-show="record.reps > 1">
