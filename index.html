@@ -198,7 +198,7 @@
                             Accessory
                         </th>
                         <td ng-repeat="record in app.$storage.records">
-                            <span ng-if="app.$storage.currentWeek !== 4">
+                            <span ng-if="app.$storage.currentWeek !== 3">
                             5 x 10
                             @{{ app.calcWeight(app.oneRepMax(record), .60, app.$storage.currentCycle, record.increment) }}
                             </span>
