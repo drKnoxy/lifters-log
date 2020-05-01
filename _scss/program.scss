@@ -1,0 +1,27 @@
+
+.table-header {
+    text-align: center;
+    border-bottom-width: 1px;
+    background-color: #f7f7f7;
+}
+.table-program {
+    display: none;
+    &.active {
+        display: table;
+    }
+    @media print {
+        display: table;
+        &:nth-child(3n) {
+            page-break-before: always
+        }
+    }
+
+    td,th {
+        text-align: center;
+    }
+    th,
+    thead > tr > th {
+        vertical-align: middle;
+        line-height: 1;
+    }
+}

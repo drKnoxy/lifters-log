@@ -1,0 +1,46 @@
+a[ng-click] {
+    cursor: pointer;
+}
+body {
+    padding: 30px 0;
+}
+.pull-right {
+    float: right;
+}
+
+// .display-2
+.header-buttons {
+    margin-top: 5px;
+    float: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+@media print {
+    .hidden-print {
+        display: none;
+    }
+    .print-pipe {
+        border-right: 1px solid #ddd;
+    }
+    .print-50 {
+        display: inline-block;
+        width: 49%;
+    }
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .xs-expand {
+        margin: 0 -15px;
+    }
+}
+
+.alert > ul {
+    padding-left: 20px;
+}

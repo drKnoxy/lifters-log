@@ -1,0 +1,65 @@
+a[ng-click] {
+  cursor: pointer; }
+
+body {
+  padding: 30px 0; }
+
+.pull-right {
+  float: right; }
+
+.header-buttons {
+  margin-top: 5px;
+  float: right; }
+
+.text-center {
+  text-align: center; }
+
+@media print {
+  .hidden-print {
+    display: none; }
+  .print-pipe {
+    border-right: 1px solid #ddd; }
+  .print-50 {
+    display: inline-block;
+    width: 49%; } }
+
+.nowrap {
+  white-space: nowrap; }
+
+@media (max-width: 767px) {
+  .xs-expand {
+    margin: 0 -15px; } }
+
+.alert > ul {
+  padding-left: 20px; }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+input[type=number] {
+  -moz-appearance: textfield; }
+
+.table-header {
+  text-align: center;
+  border-bottom-width: 1px;
+  background-color: #f7f7f7; }
+
+.table-program {
+  display: none; }
+  .table-program.active {
+    display: table; }
+  @media print {
+    .table-program {
+      display: table; }
+      .table-program:nth-child(3n) {
+        page-break-before: always; } }
+  .table-program td, .table-program th {
+    text-align: center; }
+  .table-program th,
+  .table-program thead > tr > th {
+    vertical-align: middle;
+    line-height: 1; }
+
+/*# sourceMappingURL=maps/app.css.map */

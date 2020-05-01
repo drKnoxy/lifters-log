@@ -1,24 +1,238 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>A Lifter's Log</title>
-    <meta name="description" content="An online calculator for Wendler's 5/3/1 lifting routine" />
-    <meta
-      name="keywords"
-      content="wendler, 5/3/1, 531 lifting, program, calculator, excel, spreadsheet, online 1rm"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
+<!doctype html>
+<html class="no-js" lang="en-us" ng-app="llApp" ng-controller="AppCtrl as app">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>A Lifter's Log</title>
+        <meta name="description" content="An online calculator for Wendler's 5/3/1 lifting routine">
+        <meta name="keywords" content="wendler, 5/3/1, 531 lifting, program, calculator, excel, spreadsheet, online 1rm">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="./js/app.js" type="module"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <footer class="text-center text-gray-700 text-sm">
-      &lt;3 <a class="underline" href="https://twitter.com/adamwknox">adamwknox</a> |
-      <a class="underline" href="https://github.com/drKnoxy/lifters-log">sourcecode</a>
-    </footer>
-  </body>
+        <!-- <link rel="stylesheet" href="bootstrap.css"> -->
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" integrity="sha384-gv0oNvwnqzF6ULI9TVsSmnULNb3zasNysvWwfT/s4l8k5I+g6oFz9dye0wg3rQ2Q" crossorigin="anonymous">
+        <link rel="stylesheet" href="./css/app.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+
+        <!-- <script src="./js/lib.min.js"></script> -->
+        <script src="./js/app.js"></script>
+    </head>
+    <body class="container">
+        <div
+            style="position: fixed; left: 15px; right: 15px; z-index: 100;"
+            class="alert alert-info ng-hide"
+            ng-show="app.isAlertVisible"
+        >
+            <a ng-click="app.isAlertVisible = false; app.alertMessages = [];" class="close">x</a>
+
+            <ul>
+                <li ng-repeat="msg in app.alertMessages">{{msg}}</li>
+            </ul>
+        </div>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div>
+            <div class="row">
+                <div class="col-xs-12 col-lg-6 hidden-print">
+                    <h1 style="padding-top:0px;">Online 5/3/1 Calculator</h1>
+                    <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
+                </div>
+                <div class="col-xs-12 col-lg-6">
+                    <h2 class="hidden-print">
+                        Starting PRs
+                        <a class="btn btn-default btn-sm"
+                            ng-hide="app.showEditForm"
+                            ng-click="app.showEditForm = true">
+                            edit
+                        </a>
+                    </h2>
+                    <form name="recordForm"
+                        ng-show="app.showEditForm">
+                        <div class="card">
+                            <div class="card-block">
+                                <div ng-repeat="record in app.$storage.records">
+                                    <div class="form-inline">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label class="hidden-xs">{{record.label}}</label>
+                                                <h4 class="visible-xs">{{record.label}}</h4>
+                                            </div>
+
+                                            <div class="col-sm-9">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <fieldset class="form-group">
+                                                            <label class="visible-xs">Reps</label>
+                                                            <input class="form-control"
+                                                                id=""
+                                                                type="number"
+                                                                ng-model="record.reps"
+                                                                required />
+                                                        </fieldset>
+                                                        <p class="form-control-static hidden-xs">x</p>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <fieldset class="form-group">
+                                                            <label class="visible-xs">Weight</label>
+                                                            <div class="input-group">
+                                                                <input class="form-control"
+                                                                    id=""
+                                                                    type="number"
+                                                                    ng-model="record.weight"
+                                                                    required />
+                                                                <div class="input-group-addon">
+                                                                    lbs
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a class="btn btn-primary"
+                                    ng-disabled="recordForm.$invalid"
+                                    ng-click="app.showEditForm = false">
+                                    <i class="fa fa-check"></i>
+                                    Done
+                                </a>
+
+                            </div>
+                        </div>
+                    </form>
+                    <div ng-hide="app.showEditForm" class="row">
+                        <div ng-repeat="record in app.$storage.records" class="col-sm-12">
+                            <strong>{{record.label}}:</strong>
+                            <span>{{record.reps}} x {{record.weight}}</span>
+                            <i ng-show="record.reps > 1">
+                                (1RM x {{app.oneRepMax(record) | round5}})
+                            </i>
+                        </div>
+                        <div class="col-xs-12">90% of your 1rm is used as the base for calculations.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="m-y-1" />
+
+        <div class="m-b-1 hidden-print">
+            <div class="header-buttons">
+                <label>cycle:</label>
+                <div class="btn-group">
+                    <a ng-repeat="cycle in [0,1,2,3,4,5]"
+                        ng-click="app.$storage.currentCycle = cycle"
+                        class="btn btn-default"
+                        ng-class="{active: (cycle == app.$storage.currentCycle)}">
+                        {{ cycle+1 }}
+                    </a>
+                </div>
+            </div>
+            <div class="header-buttons" style="clear:both;margin-bottom: 4px;">
+                <label>week:</label>
+                <div class="btn-group">
+                    <a ng-repeat="week in [0,1,2,3]"
+                        ng-click="app.$storage.currentWeek = week"
+                        class="btn btn-default"
+                        ng-class="{active: (week == app.$storage.currentWeek)}">
+                        {{ week+1 }}
+                    </a>
+                </div>
+            </div>
+
+            <h2 class="display-2">Lifting Routine</h2>
+        </div>
+
+        <div class="m-b-1 xs-expand">
+            <table class="table table-bordered table-program"
+                ng-repeat="week in [0,1,2,3]"
+                ng-class="{active: week == app.$storage.currentWeek}">
+                <thead>
+                    <tr>
+                        <th colspan="99"
+                            class="table-header">
+                            Week {{ week + 1 }} / Cycle {{ app.$storage.currentCycle + 1 }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="hidden-sm-down">&nbsp;</th>
+                        <th ng-repeat="record in app.$storage.records">
+                            {{record.label}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="set in app.getSets(week)"
+                        ng-class="{ 'active' : $last}">
+                        <th class="hidden-sm-down row-label"
+                            rowspan="3"
+                            ng-if="$first || $index === 3">
+                            {{ ($first) ? 'Warm Up' : 'Active' }}
+                        </th>
+                        <td
+                            ng-repeat="record in app.$storage.records"
+                            class="nowrap"
+                            ng-click="app.isAlertVisible = true; app.alertMessages = app.getPlates(app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment))"
+                        >
+                            <span ng-class="{'print-50': $parent.$last}">
+                                <span class="calculated-weight">
+                                    {{ app.calcWeight(app.oneRepMax(record), set.percentage, app.$storage.currentCycle, record.increment) }}
+                                </span>
+                                <span class="separator--weight-and-reps">x</span>
+                                <span class="reps">{{set.reps}}</span>
+                            </span>
+                            <span ng-if="$parent.$last" class="print-pipe"></span>
+                            <span ng-if="$parent.$last" class="print-50"></span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <th class="hidden-sm-down"
+                            rowspan="2">
+                            Accessory
+                        </th>
+                        <td ng-repeat="record in app.$storage.records">
+                            <span ng-if="app.$storage.currentWeek !== 3">
+                            5 x 10
+                            @{{ app.calcWeight(app.oneRepMax(record), .60, app.$storage.currentCycle, record.increment) }}
+                            </span>
+                            <span ng-if="app.$storage.currentWeek === 3">
+                                -
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- th -->
+                        <td>
+                            Chin-ups <span class="hidden-sm-down">-</span>
+                            5 x 10
+                        </td>
+                        <td>
+                            Hanging Leg Raise <span class="hidden-sm-down">-</span>
+                            5 x 10
+                        </td>
+                        <td>
+                            Dumbbell Row <span class="hidden-sm-down">-</span>
+                            5 x 10
+                        </td>
+                        <td>
+                            Leg Curl <span class="hidden-sm-down">-</span>
+                            5 x 10
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="small text-center">
+            <hr />
+            <3 <a href="https://twitter.com/adamwknox">adamwknox</a> | <a href="https://github.com/drKnoxy/lifters-log">sourcecode</a>
+        </footer>
+    </body>
 </html>
