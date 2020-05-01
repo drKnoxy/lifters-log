@@ -1,189 +1,217 @@
-// /Users/awknox/code/lifters-log/_js/app.js
-(function(){
-"use strict";
-angular.module('llApp', ['ngStorage']);
+// @ts-check
+import {
+  html,
+  render,
+  useState,
+  useEffect,
+} from "https://unpkg.com/htm/preact/standalone.module.js";
+import { defaultRecords, routine531 } from "./531-routine.js";
+import * as utils from "./utils.js";
+import { useStorageState } from "./composable.js";
+import PRForm from "./pr-form.js";
 
-})();
- 
-// /Users/awknox/code/lifters-log/_js/app.controller.js
-(function(){
-"use strict";
-angular.module('llApp')
-.controller('AppCtrl', AppCtrl);
+const cx = utils.cx;
 
-function AppCtrl(routine531, $localStorage) {
-    var vm = this;
+function App() {
+  const [currentCycle, setCycle] = useStorageState("ngStorage-currentCycle", 0);
+  const [currentWeek, setWeek] = useStorageState("ngStorage-currentWeek", 0);
+  const [records, setRecords] = useStorageState("ngStorage-records", defaultRecords);
+  const [isEditFormVis, setEditFormVis] = useState(false);
 
-    vm.program = routine531;
-    vm.getSets = function(week) {
-        return vm.program[week];
-    }
-    vm.$storage = $localStorage.$default({
-        records: [{
-            label: 'Overhead Press',
-            increment: 5,
-            reps: 2,
-            weight: 115
-        },{
-            label: 'Deadlift',
-            increment: 10,
-            reps: 3,
-            weight: 285
-        },{
-            label: 'Bench Press',
-            increment: 5,
-            reps: 1,
-            weight: 180
-        },{
-            label: 'Back Squat',
-            increment: 10,
-            reps: 5,
-            weight: 265
-        }],
-        currentCycle: 0,
-        currentWeek: 0,
+  return html`
+    <div class="container mx-auto">
+      <div class="px-2">
+        <div>
+          <h1 class="text-3xl mb-2">Online 5/3/1 Calculator</h1>
+          <p class="text-sm mb-4">
+            This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below
+            will update with what weights you should be using.
+          </p>
+        </div>
+
+        <section>
+          <div class="flex items-center">
+            <h2 class="text-xl">Starting PRs</h2>
+            ${!isEditFormVis &&
+            html`<button
+              type="button"
+              class=${cx("ml-2", ...btn({ size: "small", pill: true }))}
+              onClick=${() => setEditFormVis(true)}
+            >
+              Edit
+            </button>`}
+          </div>
+
+          ${!isEditFormVis && html`<${PRList} records=${records} />`}
+          ${isEditFormVis &&
+          html`
+            <${PRForm}
+              records=${records}
+              onClose=${() => setEditFormVis(false)}
+              onSubmit=${(r) => {
+                console.log("k");
+                setRecords(r);
+                setEditFormVis(false);
+              }}
+            />
+          `}
+        </section>
+
+        <hr class="my-4" />
+
+        <h2 class="text-xl mb-2">Lifting Routine</h2>
+
+        <${CycleWeekControls}
+          currentCycle=${currentCycle}
+          currentWeek=${currentWeek}
+          setWeek=${setWeek}
+          setCycle=${setCycle}
+        />
+      </div>
+
+      <table class="w-full mb-8 text-gray-700 border-t text-xs md:text-base">
+        <thead>
+          <tr class="bg-gray-200 border-b">
+            <th colspan="99" class="py-1">
+              Week ${currentWeek + 1} / Cycle ${currentCycle + 1}
+            </th>
+          </tr>
+          <tr class="border-b">
+            <th></th>
+            ${records.map((r) => html`<th class="p-2">${r.label}</th>`)}
+          </tr>
+        </thead>
+        <!-- Main Lifts -->
+        <tbody>
+          ${routine531(currentWeek).map((set, i, arr) => {
+            const first = i === 0;
+            const third = i === 3;
+            const last = i === arr.length - 1;
+            const workingSet = i === 5 || (third && arr.length === 4);
+            return html`
+              <tr class=${cx("border-b", { "border-gray-600": last })}>
+                ${first && html`<th class="p-2 border-r" rowspan="3">Warm Up</th>`}
+                ${third && html`<th class="p-2 border-r" rowspan="3">Active</th>`}
+                ${records.map((record) => {
+                  const css = cx("p-2 whitespace-no-wrap text-center", {
+                    "bg-gray-200": workingSet,
+                  });
+                  const weight = utils.calcWeight(
+                    utils.oneRepMax(record),
+                    set.percentage,
+                    currentCycle,
+                    record.increment
+                  );
+
+                  return html`<td class=${css}>${set.reps} @ ${weight}</td>`;
+                })}
+              </tr>
+            `;
+          })}
+        </tbody>
+        <!-- Accessory -->
+        <tbody>
+          <tr class="border-b">
+            <th class="p-2 border-r" rowspan="2">Accessory</th>
+            ${records.map((record) => {
+              return html`
+                <td class="p-2 text-center">
+                  ${getAccessoryText({ currentWeek, currentCycle, record })}
+                </td>
+              `;
+            })}
+          </tr>
+          <tr class="border-b">
+            <!-- th -->
+            <td class="p-2">
+              Chin-ups <span class="hidden sm:inline">-</span>
+              <span class="whitespace-no-wrap"> 5 x 10</span>
+            </td>
+            <td class="p-2">
+              Hanging Leg Raise <span class="hidden sm:inline">-</span>
+              <span class="whitespace-no-wrap"> 5 x 10</span>
+            </td>
+            <td class="p-2">
+              Dumbbell Row <span class="hidden sm:inline">-</span>
+              <span class="whitespace-no-wrap"> 5 x 10</span>
+            </td>
+            <td class="p-2">
+              Leg Curl <span class="hidden sm:inline">-</span>
+              <span class="whitespace-no-wrap"> 5 x 10</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function BtnGroup({ count, activeIndex, onClick }) {
+  return Array(count)
+    .fill(undefined)
+    .map((v, i, arr) => {
+      const css = cx(...btn(), {
+        "bg-gray-400 border-gray-500 shadow-inner": activeIndex == i,
+        "rounded-l-none": i !== 0,
+        "rounded-r-none": arr.length !== i + 1,
+      });
+
+      return html` <button type="button" class=${css} onClick=${() => onClick(i)}>
+        ${i + 1}
+      </button>`;
     });
-    vm.showEditForm = false;
-    vm.calcWeight = calcWeight;
-    vm.oneRepMax = oneRepMax;
-    vm.getPlates = getPlates;
-
-    activate();
-
-    ///////////////////////////
-
-    function activate() {}
-
-    /**
-     * [calcWeight description]
-     *
-     * @param  {int}   weight     [description]
-     * @param  {float} percentage [description]
-     * @param  {int}   cycle      [description]
-     * @param  {int}   increment  [description]
-     * @return {int}              [description]
-     */
-    function calcWeight(weight, percentage, cycle, increment) {
-        // Add an extra check for weight, because it is a user input,
-        // so it is very possible for it to be falsey
-        if (false === !!weight) {
-            return '-';
-        }
-
-        weight *= .9;                   // start with 90% of the recorded 1rm
-        weight += (cycle * increment);  // add to the weight based on cycle
-        weight *= percentage;           // modify the weight used based on the program
-        weight = round5(weight);        // round it to the nearest 5 lbs
-
-        return weight;
-
-        // Round to the nearest 5
-        function round5(num) {
-            return Math.round( num / 5 ) * 5;
-        }
-    }
-
-    /**
-     * Epley Formula for One rep max
-     * https://en.wikipedia.org/wiki/One-repetition_maximum
-     * @param {{weight: number, reps: number}}
-     */
-    function oneRepMax(r) {
-        if (false === !!r.weight || false === !!r.reps) {
-            return 0;
-        }
-
-        return r.weight * (1 + r.reps / 30);
-    }
-
-    function getPlates(weight) {
-        var plates = weightOnBar({weight})
-        return plates.map(({plate, count}) => `${count} x ${plate}`);
-    }
-
-    /**
-     * Returns the weight on each side
-     * 
-     * @param {{weight: number, bar: number}}
-     * @return [{plate: number, count: number}]
-     */
-    function weightOnBar({ weight, bar = 45 }) {
-        var plates = weight - bar;
-        var platesPerSide = (plates / 2);
-        var out = [];
-
-        [45, 35, 25, 10, 5, 2.5].forEach(p => {
-            var count = Math.floor(platesPerSide / p);
-            if (count > 0) {
-                out.push({ plate: p, count });
-                platesPerSide -= count*p;
-            }
-        })
-        
-        return out;
-    }
-
 }
 
-})();
- 
-// /Users/awknox/code/lifters-log/_js/round5.filter.js
-(function(){
-"use strict";
-angular.module('llApp')
-
-.filter('round5', round5);
-
-function round5() {
-    return function(input) {
-        return isNaN(input) ? '-' : Math.round( input / 5 ) * 5;
-    }
-}
-})();
- 
-// /Users/awknox/code/lifters-log/_js/routine531.service.js
-(function(){
-"use strict";
-angular.module('llApp')
-
-.factory('routine531', routine531);
-
-function routine531() {
-    var service = [
-        [
-            { reps: '5',  percentage: .40 },
-            { reps: '5',  percentage: .50 },
-            { reps: '5',  percentage: .60 },
-            { reps: '5',  percentage: .65 },
-            { reps: '5',  percentage: .75 },
-            { reps: '5+', percentage: .85 },
-        ],
-        [
-            { reps: '5',  percentage: .40 },
-            { reps: '5',  percentage: .50 },
-            { reps: '3',  percentage: .60 },
-            { reps: '3',  percentage: .70 },
-            { reps: '3',  percentage: .80 },
-            { reps: '3+', percentage: .90 },
-        ],
-        [
-            { reps: '5',  percentage: .40 },
-            { reps: '5',  percentage: .50 },
-            { reps: '5',  percentage: .60 },
-            { reps: '5',  percentage: .75 },
-            { reps: '3',  percentage: .85 },
-            { reps: '1+', percentage: .95 },
-        ],
-        [
-            { reps: '5',  percentage: .40 },
-            { reps: '5',  percentage: .50 },
-            { reps: '5', percentage: .60 },
-            { reps: '5+', percentage: .60 },
-        ],
-    ];
-
-    return service;
+function PRList({ records }) {
+  return html`
+    <div>
+      ${records.map((record) => {
+        return html`
+          <div>
+            <strong class="mr-2 text-gray-700">${record.label}:</strong>
+            <span>${record.reps} @ ${record.weight}</span>
+            ${record.reps > 1 && html`<i>(1RM x ${utils.round5(utils.oneRepMax(record))})</i>`}
+          </div>
+        `;
+      })}
+      <p class="text-sm text-gray-700">90% of your 1rm is used as the base for calculations</p>
+    </div>
+  `;
 }
 
-})();
- 
+function btn({ size = "reg", pill = false } = { size: "reg" }) {
+  return [
+    "inline-flex",
+    {
+      small: "px-3 py",
+      reg: "px-3 py-2",
+    }[size],
+    pill ? "rounded-full" : "rounded-sm",
+    "text-sm font-bold uppercase",
+    "border",
+    "bg-gray-200 border-gray-300 text-gray-600",
+    "hover:bg-gray-300 hover:border-gray-400",
+  ];
+}
+
+function CycleWeekControls({ currentCycle, currentWeek, setCycle, setWeek }) {
+  return html`
+    <div class="flex flex-col-reverse md:flex-row md:justify-between">
+      <div class="flex items-center justify-end mb-2">
+        <label class="mr-2 text-gray-600">week:</label>
+        <${BtnGroup} count=${4} activeIndex=${currentWeek} onClick=${(i) => setWeek(i)} />
+      </div>
+      <div class="flex items-center justify-end mb-2">
+        <label class="mr-2 text-gray-600">cycle:</label>
+        <${BtnGroup} count=${8} activeIndex=${currentCycle} onClick=${(i) => setCycle(i)} />
+      </div>
+    </div>
+  `;
+}
+function getAccessoryText({ currentCycle, currentWeek, record }) {
+  if (currentWeek === 3) return "-";
+  const weight = utils.calcWeight(utils.oneRepMax(record), 0.6, currentCycle, record.increment);
+  return `5 x 10 @  ${weight}`;
+}
+
+render(html`<${App} />`, document.getElementById("app"));
