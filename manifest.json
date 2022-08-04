@@ -1,0 +1,17 @@
+{
+    "name": "Lifter's Log",
+    "short_name": "Lifter's Log",
+    "theme_color": "#7dd4ff",
+    "background_color": "#7dd4ff",
+    "display": "standalone",
+    "scope": "./",
+    "start_url": "./",
+    "icons": [
+        {
+        "src": "assets/icon512.jpg",
+        "sizes": "512x512",
+        "type": "image/jpg",
+        "purpose": "maskable any"
+        }
+    ]
+}
