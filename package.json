@@ -2,11 +2,11 @@
   "name": "lifters-log",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
   "scripts": {
-    "build": "gulp compile",
-    "watch": "gulp serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -18,17 +18,17 @@
     "url": "https://github.com/drKnoxy/lifters-log/issues"
   },
   "homepage": "https://github.com/drKnoxy/lifters-log",
-  "devDependencies": {
-    "del": "^6.1.1",
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-load-plugins": "^2.0.8",
-    "gulp-sass": "^5.1.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-wrap": "^0.15.0",
-    "sass": "^1.106.1"
-  },
   "dependencies": {
-    "ngstorage": "^0.3.11"
+    "preact": "^11.0.2"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }
