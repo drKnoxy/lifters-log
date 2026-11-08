@@ -60,7 +60,7 @@ export function ProgramTable({ week, cycle, active, records, onShowPlates }: Pro
             </tbody>
             <tbody>
                 <tr>
-                    <th class="hidden-sm-down" rowSpan={2}>Accessory</th>
+                    <th class="hidden-sm-down" rowSpan={2}>Finisher</th>
                     {records.map(record => (
                         <td key={record.label}>
                             {isDeload
