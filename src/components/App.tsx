@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { LiftRecord } from '../lib/calc';
 import { getSchedule } from '../lib/schedule';
+import { StrengthProfile } from '../lib/standards';
 import { useStoredState } from '../lib/storage';
 import { CycleWeekPicker } from './CycleWeekPicker';
 import { PlateAlert } from './PlateAlert';
@@ -21,6 +22,7 @@ export function App() {
     const [currentCycle, setCurrentCycle] = useStoredState('currentCycle', 0);
     const [currentWeek, setCurrentWeek] = useStoredState('currentWeek', 0);
     const [startDate, setStartDate] = useStoredState<string | undefined>('startDate', undefined);
+    const [profile, setProfile] = useStoredState<StrengthProfile>('profile', { bodyweight: null, gender: '' });
     const [plates, setPlates] = useState<string[] | null>(null);
 
     const schedule = getSchedule(startDate, new Date());
@@ -37,6 +39,8 @@ export function App() {
                 <RecordsSection
                     records={records}
                     onRecordsChange={setRecords}
+                    profile={profile}
+                    onProfileChange={setProfile}
                     startDate={startDate}
                     onStartDateChange={setStartDate} />
             </div>

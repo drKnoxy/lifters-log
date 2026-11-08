@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/drKnoxy/lifters-log",
   "dependencies": {
+    "chart.js": "^4.6.1",
     "preact": "^11.0.2"
   },
   "type": "module",
