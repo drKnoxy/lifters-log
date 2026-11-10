@@ -71,8 +71,6 @@ export function CycleWeekPicker({ currentCycle, currentWeek, onCycleChange, onWe
                         <span>Your program starts {formatStartDate(startDate)}.</span>
                     ) : (
                         <span>
-                            This week is <strong>Cycle {schedule.cycle + 1} / Week {schedule.week + 1}</strong>.
-                            {' '}
                             {offset < 0 && (
                                 <span class="text-danger">You're viewing {plural(-offset)} behind. </span>
                             )}
