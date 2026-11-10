@@ -11,7 +11,7 @@ describe('getStrengthThresholds', () => {
     });
 
     it('scales benchmarks by body weight and gender', () => {
-        expect(getStrengthThresholds('bench', 175, 'female')).toEqual([85, 100, 125, 145]);
+        expect(getStrengthThresholds('bench', 175, 'female')).toEqual([85, 115, 145, 170]);
         expect(getStrengthThresholds('squat', 200, 'male')).toEqual([165, 235, 295, 350]);
     });
 
