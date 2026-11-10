@@ -6,14 +6,28 @@ interface Props {
     cycle: number;
     active: boolean;
     records: LiftRecord[];
+    frontSquat: LiftRecord | undefined;
+    squatVariation: 'back' | 'front';
+    onSquatVariationChange: (variation: 'back' | 'front') => void;
     onShowPlates: (plates: string[]) => void;
 }
 
 const ACCESSORIES = ['Chin-ups', 'Hanging Leg Raise', 'Dumbbell Row', 'Leg Curl'];
 
-export function ProgramTable({ week, cycle, active, records, onShowPlates }: Props) {
+export function getProgramRecords(records: LiftRecord[], frontSquat: LiftRecord | undefined, squatVariation: 'back' | 'front') {
+    return records.map(record =>
+        record.label === 'Back Squat'
+            && squatVariation === 'front'
+            && frontSquat?.reps != null
+            && frontSquat.weight != null
+            ? frontSquat
+            : record);
+}
+
+export function ProgramTable({ week, cycle, active, records, frontSquat, squatVariation, onSquatVariationChange, onShowPlates }: Props) {
     const sets = routine531[week];
     const isDeload = week === 3;
+    const programRecords = getProgramRecords(records, frontSquat, squatVariation);
 
     return (
         <table class={'table table-bordered table-program' + (active ? ' active' : '')}>
@@ -25,7 +39,19 @@ export function ProgramTable({ week, cycle, active, records, onShowPlates }: Pro
                 </tr>
                 <tr>
                     <th class="hidden-sm-down">&nbsp;</th>
-                    {records.map(record => <th key={record.label}>{record.label}</th>)}
+                    {records.map(record => (
+                        <th key={record.label}>
+                            {record.label === 'Back Squat' && frontSquat?.reps != null && frontSquat.weight != null ? (
+                                <select
+                                    aria-label="Squat variation"
+                                    value={squatVariation}
+                                    onChange={e => onSquatVariationChange(e.currentTarget.value as 'back' | 'front')}>
+                                    <option value="back">Back Squat</option>
+                                    <option value="front">Front Squat</option>
+                                </select>
+                            ) : record.label}
+                        </th>
+                    ))}
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +64,7 @@ export function ProgramTable({ week, cycle, active, records, onShowPlates }: Pro
                                     {i === 0 ? 'Warm Up' : 'Active'}
                                 </th>
                             )}
-                            {records.map(record => {
+                            {programRecords.map(record => {
                                 const weight = calcWeight(oneRepMax(record), set.percentage, cycle, record.increment);
                                 return (
                                     <td key={record.label} class="nowrap" onClick={() => onShowPlates(getPlates(weight))}>
@@ -61,7 +87,7 @@ export function ProgramTable({ week, cycle, active, records, onShowPlates }: Pro
             <tbody>
                 <tr>
                     <th class="hidden-sm-down" rowSpan={2}>Finisher</th>
-                    {records.map(record => (
+                    {programRecords.map(record => (
                         <td key={record.label}>
                             {isDeload
                                 ? '-'

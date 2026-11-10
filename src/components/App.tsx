@@ -23,6 +23,8 @@ export function App() {
     const [currentWeek, setCurrentWeek] = useStoredState('currentWeek', 0);
     const [startDate, setStartDate] = useStoredState<string | undefined>('startDate', undefined);
     const [profile, setProfile] = useStoredState<StrengthProfile>('profile', { bodyweight: null, gender: '' });
+    const [frontSquat, setFrontSquat] = useStoredState<LiftRecord | undefined>('frontSquat', undefined);
+    const [squatVariation, setSquatVariation] = useStoredState<'back' | 'front'>('squatVariation', 'back');
     const [plates, setPlates] = useState<string[] | null>(null);
 
     const schedule = getSchedule(startDate, new Date());
@@ -41,6 +43,8 @@ export function App() {
                     onRecordsChange={setRecords}
                     profile={profile}
                     onProfileChange={setProfile}
+                    frontSquat={frontSquat}
+                    onFrontSquatChange={setFrontSquat}
                     startDate={startDate}
                     onStartDateChange={setStartDate} />
             </div>
@@ -63,6 +67,9 @@ export function App() {
                         cycle={currentCycle}
                         active={week === currentWeek}
                         records={records}
+                        frontSquat={frontSquat}
+                        squatVariation={squatVariation}
+                        onSquatVariationChange={setSquatVariation}
                         onShowPlates={setPlates} />
                 ))}
             </div>

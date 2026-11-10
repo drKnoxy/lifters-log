@@ -9,6 +9,8 @@ interface Props {
     onRecordsChange: (records: LiftRecord[]) => void;
     profile: StrengthProfile;
     onProfileChange: (profile: StrengthProfile) => void;
+    frontSquat: LiftRecord | undefined;
+    onFrontSquatChange: (record: LiftRecord | undefined) => void;
     startDate: string | undefined;
     onStartDateChange: (date: string | undefined) => void;
 }
@@ -25,12 +27,19 @@ function toNumber(value: string): number | null {
     return value === '' ? null : Number(value);
 }
 
-export function RecordsSection({ records, onRecordsChange, profile, onProfileChange, startDate, onStartDateChange }: Props) {
+export function RecordsSection({ records, onRecordsChange, profile, onProfileChange, frontSquat, onFrontSquatChange, startDate, onStartDateChange }: Props) {
     const [showEditForm, setShowEditForm] = useState(false);
-    const isValid = records.every(r => r.reps != null && r.weight != null);
+    const isValid = records.every(r => r.reps != null && r.weight != null)
+        && (!frontSquat || (frontSquat.reps != null && frontSquat.weight != null));
 
     function update(index: number, field: 'reps' | 'weight', value: string) {
         onRecordsChange(records.map((r, i) => i === index ? { ...r, [field]: toNumber(value) } : r));
+    }
+
+    function updateFrontSquat(field: 'reps' | 'weight', value: string) {
+        if (frontSquat) {
+            onFrontSquatChange({ ...frontSquat, [field]: toNumber(value) });
+        }
     }
 
     function updateBodyweight(value: string) {
@@ -93,6 +102,53 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
                             </div>
                         </div>
                     ))}
+
+                    <div class="form-inline">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>
+                                    <input type="checkbox"
+                                        checked={!!frontSquat}
+                                        onChange={e => onFrontSquatChange(e.currentTarget.checked
+                                            ? { label: 'Front Squat', increment: 10, reps: null, weight: null }
+                                            : undefined)} />
+                                    {' '}Track Front Squat
+                                </label>
+                            </div>
+                            {frontSquat && (
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <fieldset class="form-group">
+                                                <label class="visible-xs">Front Squat Reps</label>
+                                                <input class="form-control"
+                                                    type="number"
+                                                    aria-label="Front Squat reps"
+                                                    value={frontSquat.reps ?? ''}
+                                                    onInput={e => updateFrontSquat('reps', e.currentTarget.value)}
+                                                    required />
+                                            </fieldset>
+                                            <p class="form-control-static hidden-xs">x</p>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <fieldset class="form-group">
+                                                <label class="visible-xs">Front Squat Weight</label>
+                                                <div class="input-group">
+                                                    <input class="form-control"
+                                                        type="number"
+                                                        aria-label="Front Squat weight"
+                                                        value={frontSquat.weight ?? ''}
+                                                        onInput={e => updateFrontSquat('weight', e.currentTarget.value)}
+                                                        required />
+                                                    <div class="input-group-addon">lbs</div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
                     <div class="form-inline">
                         <div class="row">
@@ -181,6 +237,24 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
                             )}
                         </div>
                     ))}
+                    {frontSquat && (
+                        <div class="col-sm-12">
+                            <div class="record-summary">
+                                <strong>{frontSquat.label}:</strong>{' '}
+                                <span>{frontSquat.reps} x {frontSquat.weight}</span>
+                                {(frontSquat.reps ?? 0) > 1 && (
+                                    <i>{' '}(1RM x {round5(oneRepMax(frontSquat))})</i>
+                                )}
+                            </div>
+                            {profile.bodyweight != null && profile.gender && oneRepMax(frontSquat) > 0 && (
+                                <ProficiencyGauge
+                                    liftLabel={frontSquat.label}
+                                    oneRepMax={oneRepMax(frontSquat)}
+                                    bodyweight={profile.bodyweight}
+                                    gender={profile.gender} />
+                            )}
+                        </div>
+                    )}
                     {(profile.bodyweight != null || profile.gender) && (
                         <div class="col-sm-12">
                             <strong>Strength profile:</strong>{' '}
