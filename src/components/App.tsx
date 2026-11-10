@@ -15,6 +15,7 @@ const DEFAULT_RECORDS: LiftRecord[] = [
     { label: 'Back Squat',     increment: 10, reps: 5, weight: 265 },
 ];
 
+const EMPTY_FRONT_SQUAT: LiftRecord = { label: 'Front Squat', increment: 5, reps: null, weight: null };
 const WEEKS = [0, 1, 2, 3];
 
 export function App() {
@@ -25,6 +26,10 @@ export function App() {
     const [profile, setProfile] = useStoredState<StrengthProfile>('profile', { bodyweight: null, gender: '' });
     const [plates, setPlates] = useState<string[] | null>(null);
 
+    const recordsWithFrontSquat = records.some(record => record.label === 'Front Squat')
+        ? records
+        : [...records, EMPTY_FRONT_SQUAT];
+    const programRecords = recordsWithFrontSquat.filter(record => record.label !== 'Front Squat');
     const schedule = getSchedule(startDate, new Date());
 
     return (
@@ -37,7 +42,7 @@ export function App() {
                     <p>This is a calculator for wendler's 5/3/1 routine. Enter your PRs, and the tables below will update with what weights you should be using.</p>
                 </div>
                 <RecordsSection
-                    records={records}
+                    records={recordsWithFrontSquat}
                     onRecordsChange={setRecords}
                     profile={profile}
                     onProfileChange={setProfile}
@@ -62,7 +67,7 @@ export function App() {
                         week={week}
                         cycle={currentCycle}
                         active={week === currentWeek}
-                        records={records}
+                        records={programRecords}
                         onShowPlates={setPlates} />
                 ))}
             </div>

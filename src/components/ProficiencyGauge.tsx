@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { BarController, BarElement, CategoryScale, Chart, LinearScale, type Plugin } from 'chart.js';
-import { getStrengthLevel, getStrengthLift, getStrengthThresholds, STRENGTH_LEVELS, StrengthGender } from '../lib/standards';
+import { getStrengthLevel, getStrengthLift, getStrengthScale, getStrengthThresholds, StrengthGender } from '../lib/standards';
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale);
 
@@ -22,14 +22,14 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
             return;
         }
 
-        const scaleMax = thresholds[3] * 1.15;
+        const scale = getStrengthScale(oneRepMax, thresholds);
+        const [first, second, third] = scale.thresholds;
         const segmentValues = [
-            thresholds[1],
-            thresholds[2] - thresholds[1],
-            thresholds[3] - thresholds[2],
-            scaleMax - thresholds[3],
+            second - first,
+            third - second,
+            scale.max - third,
         ];
-        const colors = ['#dceef4', '#b7dce9', '#82c1d8', '#158cba'];
+        const colors = ['#b7dce9', '#82c1d8', '#158cba'];
         const overlay: Plugin<'bar'> = {
             id: 'proficiency-thresholds',
             afterDatasetsDraw(chart) {
@@ -40,9 +40,9 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
                 }
 
                 const context = chart.ctx;
-                const labels = thresholds.slice(1).map((threshold, index) => {
+                const labels = scale.thresholds.map((threshold, index) => {
                     const position = xScale.getPixelForValue(threshold);
-                    const levelLabel = STRENGTH_LEVELS[index + 1];
+                    const levelLabel = scale.levels[index];
                     const weightLabel = `${Math.round(threshold)} lb`;
                     const labelWidth = Math.max(
                         context.measureText(levelLabel).width,
@@ -79,7 +79,7 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
 
                 context.strokeStyle = '#555';
                 context.lineWidth = 1;
-                thresholds.slice(1).forEach(threshold => {
+                scale.thresholds.forEach(threshold => {
                     const x = xScale.getPixelForValue(threshold);
                     context.beginPath();
                     context.moveTo(x, bar.y - barHalfHeight);
@@ -87,7 +87,7 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
                     context.stroke();
                 });
 
-                const markerValue = Math.max(thresholds[1], Math.min(oneRepMax, scaleMax));
+                const markerValue = Math.max(scale.min, Math.min(oneRepMax, scale.max));
                 const markerX = xScale.getPixelForValue(markerValue);
                 context.fillStyle = '#222';
                 context.fillRect(markerX - 2, bar.y - 9, 4, 18);
@@ -122,8 +122,8 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
                 scales: {
                     x: {
                         type: 'linear',
-                        min: thresholds[1],
-                        max: scaleMax,
+                        min: scale.min,
+                        max: scale.max,
                         stacked: true,
                         display: false,
                         alignToPixels: true,
@@ -145,8 +145,9 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
     }
 
     const level = getStrengthLevel(oneRepMax, thresholds);
-    const accessibleThresholds = thresholds.slice(1).map((threshold, index) =>
-        `${STRENGTH_LEVELS[index + 1]} ${Math.round(threshold)} pounds`,
+    const scale = getStrengthScale(oneRepMax, thresholds);
+    const accessibleThresholds = scale.thresholds.map((threshold, index) =>
+        `${scale.levels[index]} ${Math.round(threshold)} pounds`,
     ).join(', ');
 
     return (
