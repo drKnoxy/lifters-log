@@ -3,6 +3,7 @@ export interface LiftRecord {
     increment: number;
     reps: number | null;   // null while the input is empty
     weight: number | null;
+    isOptional?: boolean;
 }
 
 export function round5(num: number): number {

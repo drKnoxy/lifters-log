@@ -15,7 +15,13 @@ const DEFAULT_RECORDS: LiftRecord[] = [
     { label: 'Back Squat',     increment: 10, reps: 5, weight: 265 },
 ];
 
-const EMPTY_FRONT_SQUAT: LiftRecord = { label: 'Front Squat', increment: 5, reps: null, weight: null };
+const EMPTY_FRONT_SQUAT: LiftRecord = {
+    label: 'Front Squat',
+    increment: 5,
+    reps: null,
+    weight: null,
+    isOptional: true,
+};
 const WEEKS = [0, 1, 2, 3];
 
 export function App() {
@@ -26,10 +32,15 @@ export function App() {
     const [profile, setProfile] = useStoredState<StrengthProfile>('profile', { bodyweight: null, gender: '' });
     const [plates, setPlates] = useState<string[] | null>(null);
 
-    const recordsWithFrontSquat = records.some(record => record.label === 'Front Squat')
-        ? records
-        : [...records, EMPTY_FRONT_SQUAT];
-    const programRecords = recordsWithFrontSquat.filter(record => record.label !== 'Front Squat');
+    const markedRecords = records.map(record =>
+        record.label === 'Front Squat' && !record.isOptional
+            ? { ...record, isOptional: true }
+            : record,
+    );
+    const recordsWithFrontSquat = markedRecords.some(record => record.isOptional)
+        ? markedRecords
+        : [...markedRecords, EMPTY_FRONT_SQUAT];
+    const programRecords = recordsWithFrontSquat.filter(record => !record.isOptional);
     const schedule = getSchedule(startDate, new Date());
 
     return (

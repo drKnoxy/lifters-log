@@ -28,7 +28,7 @@ function toNumber(value: string): number | null {
 export function RecordsSection({ records, onRecordsChange, profile, onProfileChange, startDate, onStartDateChange }: Props) {
     const [showEditForm, setShowEditForm] = useState(false);
     const isValid = records.every(r =>
-        (r.label === 'Front Squat' && r.reps == null && r.weight == null) ||
+        (r.isOptional && r.reps == null && r.weight == null) ||
         (r.reps != null && r.weight != null),
     );
 
@@ -165,9 +165,7 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
             ) : (
                 <div class="row">
                     {records
-                        .filter(record =>
-                            record.label !== 'Front Squat' || (record.reps != null && record.weight != null),
-                        )
+                        .filter(record => !record.isOptional || (record.reps != null && record.weight != null))
                         .map(record => (
                         <div class="col-sm-12" key={record.label}>
                             <div class="record-summary">
