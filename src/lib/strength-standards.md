@@ -1,31 +1,21 @@
-# Strength Standards Research
+# Strength Standards
 
-This note documents the benchmark source used by the proficiency gauges. The 1RM being evaluated is the app's estimate from `oneRepMax` in `calc.ts`.
+The proficiency gauges estimate four 1RM tiers (Novice, Intermediate, Advanced, Elite) from the user's body weight, gender, and lift. For body weights from 90 to 350 lb, each tier is calculated as:
 
-## Selected Source
+`round5(lift coefficient × gender coefficient × 175 × (175 / bodyweight)^0.75)`
 
-[StrengthLog's strength standards](https://www.strengthlog.com/strength-standards/) publishes bodyweight-specific tables by gender for bench press, squat, deadlift, and overhead press. Its overhead-press page reports training-log samples of 14,081 men and 5,711 women. The source defines five levels (Beginner, Novice, Intermediate, Advanced, Elite) using percentiles of its logged lifters.
+The lift coefficients at the 175 lb male reference weight are:
 
-The app uses the source's Beginner, Novice, Intermediate, and Advanced cutoffs. Elite is grouped into Advanced so the gauge has the four requested labels. A level is the highest cutoff reached; lifts below the Beginner cutoff remain Beginner.
+| Lift | Novice | Intermediate | Advanced | Elite |
+| --- | ---: | ---: | ---: | ---: |
+| Back Squat | 1.03 | 1.49 | 1.86 | 2.20 |
+| Front Squat | 0.86 | 1.23 | 1.57 | 1.83 |
+| Bench Press | 0.86 | 1.14 | 1.43 | 1.69 |
+| Deadlift | 1.26 | 1.86 | 2.23 | 2.57 |
+| Overhead Press | 0.57 | 0.69 | 0.77 | 0.94 |
 
-Source values are published in 10 lb bodyweight steps. `standards.ts` stores the four selected cutoffs for each source row, linearly interpolates between adjacent rows, and rounds each resulting cutoff to the nearest 5 lb. Those rounded cutoffs are used for both gauge positions and level classification. It does not extrapolate outside the published ranges (90-260 lb for women and 110-310 lb for men), so gauges are unavailable outside those ranges. The cited dataset uses men/women categories; the app leaves gender unset by default and only compares when the profile matches one of those categories.
+Male gender coefficient is 1.0. The source gives female ranges rather than exact values, so the app uses their midpoints: 0.575 for upper-body lifts and 0.705 for lower-body lifts. Final thresholds are rounded to the nearest 5 lb.
 
-The source's 220 lb women's squat row displays `1266` for the Novice value, inconsistent with the adjacent 210 lb (`124`) and 230 lb (`128`) rows. The local table uses `126`, treating the final `6` as a stray footnote digit. Recheck the source if updating the data.
+The gauge shows three adjacent tiers, shifting from Novice–Advanced to Intermediate–Elite as the user's current tier moves upward. Front squat is an optional input and is included in the strength gauges, not the 5/3/1 program tables.
 
-## Example At 180 lb Bodyweight
-
-Rounded 1RM cutoffs in pounds, in Beginner / Novice / Intermediate / Advanced order.
-
-| Lift | Men | Women |
-| --- | --- | --- |
-| Bench Press | 125 / 165 / 205 / 245 | 55 / 85 / 105 / 135 |
-| Squat | 130 / 200 / 250 / 305 | 60 / 120 / 160 / 205 |
-| Deadlift | 165 / 250 / 320 / 385 | 90 / 165 / 205 / 260 |
-| Overhead Press | 70 / 100 / 120 / 140 | 35 / 55 / 70 / 85 |
-
-## Alternatives Considered
-
-- [Strength Level](https://strengthlevel.com/strength-standards) covers the four lifts and has a substantially larger logged-lift dataset, but also introduces age as a benchmark dimension and uses different percentile cutoffs.
-- [Stronger standards](https://www.strongermobileapp.com/standards), the initially supplied reference, varies by bodyweight, age, and sex and presents six levels. Its standards pages cover bench press, squat, and deadlift, but not overhead press.
-
-The exact source pages used for the selected tables are [bench press](https://www.strengthlog.com/bench-press-strength-standards-lb/), [squat](https://www.strengthlog.com/squat-strength-standards-lb/), [deadlift](https://www.strengthlog.com/deadlift-strength-standards-lb/), and [overhead press](https://www.strengthlog.com/overhead-press-strength-standards-lb/). Reviewed 2026-11-08.
+The baseline coefficients and formula are from the [Dynamic Strength Standards Calculator specification](https://share.gemini.google/QRJCuLGQBQdA).

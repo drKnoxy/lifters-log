@@ -27,7 +27,10 @@ function toNumber(value: string): number | null {
 
 export function RecordsSection({ records, onRecordsChange, profile, onProfileChange, startDate, onStartDateChange }: Props) {
     const [showEditForm, setShowEditForm] = useState(false);
-    const isValid = records.every(r => r.reps != null && r.weight != null);
+    const isValid = records.every(r =>
+        (r.isOptional && r.reps == null && r.weight == null) ||
+        (r.reps != null && r.weight != null),
+    );
 
     function update(index: number, field: 'reps' | 'weight', value: string) {
         onRecordsChange(records.map((r, i) => i === index ? { ...r, [field]: toNumber(value) } : r));
@@ -161,7 +164,9 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
                 </form>
             ) : (
                 <div class="row">
-                    {records.map(record => (
+                    {records
+                        .filter(record => !record.isOptional || (record.reps != null && record.weight != null))
+                        .map(record => (
                         <div class="col-sm-12" key={record.label}>
                             <div class="record-summary">
                                 <strong>{record.label}:</strong>
