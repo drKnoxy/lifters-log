@@ -25,11 +25,12 @@ export function ProficiencyGauge({ liftLabel, oneRepMax, bodyweight, gender }: P
         const scale = getStrengthScale(oneRepMax, thresholds);
         const [first, second, third] = scale.thresholds;
         const segmentValues = [
+            scale.min,
             second - first,
             third - second,
             scale.max - third,
         ];
-        const colors = ['#b7dce9', '#82c1d8', '#158cba'];
+        const colors = ['transparent', '#b7dce9', '#82c1d8', '#158cba'];
         const overlay: Plugin<'bar'> = {
             id: 'proficiency-thresholds',
             afterDatasetsDraw(chart) {
