@@ -1,9 +1,25 @@
 export interface LiftRecord {
+    key: string;
     label: string;
     increment: number;
     reps: number | null;   // null while the input is empty
     weight: number | null;
     isOptional?: boolean;
+}
+
+const LEGACY_LIFT_KEYS = new Map([
+    ['Overhead Press', 'overheadPress'],
+    ['Deadlift', 'deadlift'],
+    ['Bench Press', 'benchPress'],
+    ['Back Squat', 'backSquat'],
+    ['Front Squat', 'frontSquat'],
+]);
+
+export function ensureLiftKeys(records: Array<Omit<LiftRecord, 'key'> & { key?: string }>): LiftRecord[] {
+    return records.map((record, index) => ({
+        ...record,
+        key: record.key || LEGACY_LIFT_KEYS.get(record.label) || `lift-${index + 1}`,
+    }));
 }
 
 export function round5(num: number): number {

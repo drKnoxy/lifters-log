@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { LiftRecord } from '../lib/calc';
+import { ensureLiftKeys, LiftRecord } from '../lib/calc';
 import { getSchedule } from '../lib/schedule';
 import { StrengthProfile } from '../lib/standards';
 import { useStoredState } from '../lib/storage';
@@ -9,13 +9,14 @@ import { ProgramTable } from './ProgramTable';
 import { RecordsSection } from './RecordsSection';
 
 const DEFAULT_RECORDS: LiftRecord[] = [
-    { label: 'Overhead Press', increment: 5,  reps: 2, weight: 115 },
-    { label: 'Deadlift',       increment: 10, reps: 3, weight: 285 },
-    { label: 'Bench Press',    increment: 5,  reps: 1, weight: 180 },
-    { label: 'Back Squat',     increment: 10, reps: 5, weight: 265 },
+    { key: 'overheadPress', label: 'Overhead Press', increment: 5,  reps: 2, weight: 115 },
+    { key: 'deadlift',      label: 'Deadlift',       increment: 10, reps: 3, weight: 285 },
+    { key: 'benchPress',   label: 'Bench Press',    increment: 5,  reps: 1, weight: 180 },
+    { key: 'backSquat',    label: 'Back Squat',     increment: 10, reps: 5, weight: 265 },
 ];
 
 const EMPTY_FRONT_SQUAT: LiftRecord = {
+    key: 'frontSquat',
     label: 'Front Squat',
     increment: 5,
     reps: null,
@@ -33,16 +34,16 @@ export function App() {
     const [squatVariation, setSquatVariation] = useStoredState<'back' | 'front'>('squatVariation', 'back');
     const [plates, setPlates] = useState<string[] | null>(null);
 
-    const markedRecords = records.map(record =>
-        record.label === 'Front Squat' && !record.isOptional
+    const markedRecords = ensureLiftKeys(records).map(record =>
+        record.key === 'frontSquat' && !record.isOptional
             ? { ...record, isOptional: true }
             : record,
     );
-    const recordsWithFrontSquat = markedRecords.some(record => record.label === 'Front Squat')
+    const recordsWithFrontSquat = markedRecords.some(record => record.key === 'frontSquat')
         ? markedRecords
         : [...markedRecords, EMPTY_FRONT_SQUAT];
     const programRecords = recordsWithFrontSquat.filter(record => !record.isOptional);
-    const frontSquat = recordsWithFrontSquat.find(record => record.label === 'Front Squat');
+    const frontSquat = recordsWithFrontSquat.find(record => record.key === 'frontSquat');
     const schedule = getSchedule(startDate, new Date());
 
     return (

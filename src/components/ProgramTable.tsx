@@ -16,7 +16,7 @@ const ACCESSORIES = ['Chin-ups', 'Hanging Leg Raise', 'Dumbbell Row', 'Leg Curl'
 
 export function getProgramRecords(records: LiftRecord[], frontSquat: LiftRecord | undefined, squatVariation: 'back' | 'front') {
     return records.map(record =>
-        record.label === 'Back Squat'
+        record.key === 'backSquat'
             && squatVariation === 'front'
             && frontSquat?.reps != null
             && frontSquat.weight != null
@@ -40,8 +40,8 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
                 <tr>
                     <th class="hidden-sm-down">&nbsp;</th>
                     {records.map(record => (
-                        <th key={record.label}>
-                            {record.label === 'Back Squat' && frontSquat?.reps != null && frontSquat.weight != null ? (
+                        <th key={record.key}>
+                            {record.key === 'backSquat' && frontSquat?.reps != null && frontSquat.weight != null ? (
                                 <select
                                     aria-label="Squat variation"
                                     value={squatVariation}
@@ -67,7 +67,7 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
                             {programRecords.map(record => {
                                 const weight = calcWeight(oneRepMax(record), set.percentage, cycle, record.increment);
                                 return (
-                                    <td key={record.label} class="nowrap" onClick={() => onShowPlates(getPlates(weight))}>
+                                    <td key={record.key} class="nowrap" onClick={() => onShowPlates(getPlates(weight))}>
                                         <span class={isLast ? 'print-50' : undefined}>
                                             <span class="calculated-weight">{weight}</span>
                                             {' '}
@@ -88,7 +88,7 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
                 <tr>
                     <th class="hidden-sm-down" rowSpan={2}>Finisher</th>
                     {programRecords.map(record => (
-                        <td key={record.label}>
+                        <td key={record.key}>
                             {isDeload
                                 ? '-'
                                 : `5 x 10 @${calcWeight(oneRepMax(record), .60, cycle, record.increment)}`}

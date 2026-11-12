@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { calcWeight, getPlates, oneRepMax, round5 } from './calc';
+import { calcWeight, ensureLiftKeys, getPlates, oneRepMax, round5 } from './calc';
+
+describe('ensureLiftKeys', () => {
+    it('adds stable keys to legacy lift records and preserves existing keys', () => {
+        expect(ensureLiftKeys([
+            { label: 'Back Squat', increment: 10, reps: 5, weight: 265 },
+            { key: 'customLift', label: 'Custom Lift', increment: 5, reps: 5, weight: 100 },
+        ])).toEqual([
+            { key: 'backSquat', label: 'Back Squat', increment: 10, reps: 5, weight: 265 },
+            { key: 'customLift', label: 'Custom Lift', increment: 5, reps: 5, weight: 100 },
+        ]);
+    });
+});
 
 describe('round5', () => {
     it('rounds to the nearest 5', () => {
