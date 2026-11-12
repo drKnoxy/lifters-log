@@ -15,19 +15,36 @@ interface Props {
 const ACCESSORIES = ['Chin-ups', 'Hanging Leg Raise', 'Dumbbell Row', 'Leg Curl'];
 
 export function getProgramRecords(records: LiftRecord[], frontSquat: LiftRecord | undefined, squatVariation: 'back' | 'front') {
-    return records.map(record =>
-        record.key === 'backSquat'
+    return records.map(record => {
+        const useFrontSquat = record.key === 'backSquat'
             && squatVariation === 'front'
             && frontSquat?.reps != null
-            && frontSquat.weight != null
-            ? frontSquat
-            : record);
+            && frontSquat.weight != null;
+        return useFrontSquat ? frontSquat : record;
+    });
 }
 
 export function ProgramTable({ week, cycle, active, records, frontSquat, squatVariation, onSquatVariationChange, onShowPlates }: Props) {
     const sets = routine531[week];
     const isDeload = week === 3;
     const programRecords = getProgramRecords(records, frontSquat, squatVariation);
+    const showSquatSelector = frontSquat?.reps != null && frontSquat.weight != null;
+
+    function renderLiftHeader(record: LiftRecord) {
+        if (record.key !== 'backSquat' || !showSquatSelector) {
+            return record.label;
+        }
+
+        return (
+            <select
+                aria-label="Squat variation"
+                value={squatVariation}
+                onChange={e => onSquatVariationChange(e.currentTarget.value as 'back' | 'front')}>
+                <option value="back">Back Squat</option>
+                <option value="front">Front Squat</option>
+            </select>
+        );
+    }
 
     return (
         <table class={'table table-bordered table-program' + (active ? ' active' : '')}>
@@ -40,17 +57,7 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
                 <tr>
                     <th class="hidden-sm-down">&nbsp;</th>
                     {records.map(record => (
-                        <th key={record.key}>
-                            {record.key === 'backSquat' && frontSquat?.reps != null && frontSquat.weight != null ? (
-                                <select
-                                    aria-label="Squat variation"
-                                    value={squatVariation}
-                                    onChange={e => onSquatVariationChange(e.currentTarget.value as 'back' | 'front')}>
-                                    <option value="back">Back Squat</option>
-                                    <option value="front">Front Squat</option>
-                                </select>
-                            ) : record.label}
-                        </th>
+                        <th key={record.key}>{renderLiftHeader(record)}</th>
                     ))}
                 </tr>
             </thead>
