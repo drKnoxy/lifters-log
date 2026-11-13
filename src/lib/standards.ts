@@ -54,7 +54,7 @@ export function getStrengthLevel(oneRepMax: number, thresholds: StrengthThreshol
 
 export function getStrengthScale(oneRepMax: number, thresholds: StrengthThresholds) {
     const levelIndex = STRENGTH_LEVELS.indexOf(getStrengthLevel(oneRepMax, thresholds));
-    const startIndex = Math.min(Math.max(levelIndex - 1, 0), 1);
+    const startIndex = levelIndex === 0 ? 0 : 1;
     const visibleThresholds = thresholds.slice(startIndex, startIndex + 3) as unknown as readonly [number, number, number];
     const max = startIndex === 0 ? thresholds[3] : thresholds[3] * 1.15;
 
