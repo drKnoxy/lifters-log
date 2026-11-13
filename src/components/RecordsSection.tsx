@@ -59,7 +59,7 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
             {showEditForm ? (
                 <form onSubmit={e => e.preventDefault()}>
                     {records.map((record, i) => (
-                        <div class="form-inline" key={record.label}>
+                        <div class="form-inline" key={record.key}>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label class="hidden-xs">{record.label}</label>
@@ -167,7 +167,7 @@ export function RecordsSection({ records, onRecordsChange, profile, onProfileCha
                     {records
                         .filter(record => !record.isOptional || (record.reps != null && record.weight != null))
                         .map(record => (
-                        <div class="col-sm-12" key={record.label}>
+                        <div class="col-sm-12" key={record.key}>
                             <div class="record-summary">
                                 <strong>{record.label}:</strong>
                                 {' '}
