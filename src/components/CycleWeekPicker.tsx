@@ -31,7 +31,7 @@ export function CycleWeekPicker({ currentCycle, currentWeek, onCycleChange, onWe
     return (
         <div class="m-b-1 hidden-print">
             <div class="header-buttons">
-                <label>cycle:</label>
+                <label class="label label-default">cycle:</label>
                 <div class="btn-group">
                     {CYCLES.map(cycle => (
                         <button type="button" key={cycle}
@@ -47,7 +47,7 @@ export function CycleWeekPicker({ currentCycle, currentWeek, onCycleChange, onWe
                 </div>
             </div>
             <div class="header-buttons" style={{ clear: 'both', marginBottom: '4px' }}>
-                <label>week:</label>
+                <label class="label label-default">week:</label>
                 <div class="btn-group">
                     {WEEKS.map(week => (
                         <button type="button" key={week}
