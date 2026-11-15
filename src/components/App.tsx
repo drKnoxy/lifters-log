@@ -5,7 +5,7 @@ import { StrengthProfile } from '../lib/standards';
 import { useStoredState } from '../lib/storage';
 import { CycleWeekPicker } from './CycleWeekPicker';
 import { PlateAlert } from './PlateAlert';
-import { ProgramTable } from './ProgramTable';
+import { ProgramTable, toggleSelectedSet } from './ProgramTable';
 import { RecordsSection } from './RecordsSection';
 
 const DEFAULT_RECORDS: LiftRecord[] = [
@@ -32,7 +32,9 @@ export function App() {
     const [startDate, setStartDate] = useStoredState<string | undefined>('startDate', undefined);
     const [profile, setProfile] = useStoredState<StrengthProfile>('profile', { bodyweight: null, gender: '' });
     const [squatVariation, setSquatVariation] = useStoredState<'back' | 'front'>('squatVariation', 'back');
-    const [plates, setPlates] = useState<string[] | null>(null);
+    const [barWeights, setBarWeights] = useStoredState<Record<string, number>>('barWeights', {});
+    const [selectedSets, setSelectedSets] = useState<Record<string, number | undefined>>({});
+    const [plates, setPlates] = useState<{ key: string; label: string; weight: number | '-' } | null>(null);
 
     const markedRecords = ensureLiftKeys(records).map(record =>
         record.key === 'frontSquat' && !record.isOptional
@@ -48,7 +50,12 @@ export function App() {
 
     return (
         <>
-            {plates && <PlateAlert messages={plates} onClose={() => setPlates(null)} />}
+            {plates && <PlateAlert
+                lift={plates.label}
+                weight={plates.weight}
+                barWeight={barWeights[plates.key] ?? 45}
+                onBarWeightChange={weight => setBarWeights({ ...barWeights, [plates.key]: weight })}
+                onClose={() => setPlates(null)} />}
 
             <div class="row">
                 <div class="col-xs-12 col-lg-6 hidden-print">
@@ -69,8 +76,16 @@ export function App() {
             <CycleWeekPicker
                 currentCycle={currentCycle}
                 currentWeek={currentWeek}
-                onCycleChange={setCurrentCycle}
-                onWeekChange={setCurrentWeek}
+                onCycleChange={cycle => {
+                    setCurrentCycle(cycle);
+                    setSelectedSets({});
+                    setPlates(null);
+                }}
+                onWeekChange={week => {
+                    setCurrentWeek(week);
+                    setSelectedSets({});
+                    setPlates(null);
+                }}
                 schedule={schedule}
                 startDate={startDate} />
 
@@ -84,8 +99,16 @@ export function App() {
                         records={programRecords}
                         frontSquat={frontSquat}
                         squatVariation={squatVariation}
-                        onSquatVariationChange={setSquatVariation}
-                        onShowPlates={setPlates} />
+                        onSquatVariationChange={variation => {
+                            setSquatVariation(variation);
+                            setSelectedSets({});
+                            setPlates(null);
+                        }}
+                        selectedSets={selectedSets}
+                        onShowPlates={(column, set, record, weight) => {
+                            setSelectedSets(toggleSelectedSet(selectedSets, column, set));
+                            setPlates({ key: record.key, label: record.label, weight });
+                        }} />
                 ))}
             </div>
 

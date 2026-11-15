@@ -1,4 +1,4 @@
-import { LiftRecord, calcWeight, getPlates, oneRepMax } from '../lib/calc';
+import { LiftRecord, calcWeight, oneRepMax } from '../lib/calc';
 import { routine531 } from '../lib/routine531';
 
 interface Props {
@@ -9,7 +9,8 @@ interface Props {
     frontSquat: LiftRecord | undefined;
     squatVariation: 'back' | 'front';
     onSquatVariationChange: (variation: 'back' | 'front') => void;
-    onShowPlates: (plates: string[]) => void;
+    selectedSets: Record<string, number | undefined>;
+    onShowPlates: (column: string, set: number, record: LiftRecord, weight: number | '-') => void;
 }
 
 const ACCESSORIES = ['Chin-ups', 'Hanging Leg Raise', 'Dumbbell Row', 'Leg Curl'];
@@ -24,7 +25,11 @@ export function getProgramRecords(records: LiftRecord[], frontSquat: LiftRecord 
     });
 }
 
-export function ProgramTable({ week, cycle, active, records, frontSquat, squatVariation, onSquatVariationChange, onShowPlates }: Props) {
+export function toggleSelectedSet(selected: Record<string, number | undefined>, column: string, set: number) {
+    return { ...selected, [column]: selected[column] === set ? undefined : set };
+}
+
+export function ProgramTable({ week, cycle, active, records, frontSquat, squatVariation, onSquatVariationChange, selectedSets, onShowPlates }: Props) {
     const sets = routine531[week];
     const isDeload = week === 3;
     const programRecords = getProgramRecords(records, frontSquat, squatVariation);
@@ -36,13 +41,16 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
         }
 
         return (
-            <select
-                aria-label="Squat variation"
-                value={squatVariation}
-                onChange={e => onSquatVariationChange(e.currentTarget.value as 'back' | 'front')}>
-                <option value="back">Back Squat</option>
-                <option value="front">Front Squat</option>
-            </select>
+            <span class="squat-selector">
+                <span aria-hidden="true">{squatVariation === 'front' ? 'Front Squat' : 'Back Squat'} ▾</span>
+                <select
+                    aria-label="Squat variation"
+                    value={squatVariation}
+                    onChange={e => onSquatVariationChange(e.currentTarget.value as 'back' | 'front')}>
+                    <option value="back">Back Squat</option>
+                    <option value="front">Front Squat</option>
+                </select>
+            </span>
         );
     }
 
@@ -71,19 +79,25 @@ export function ProgramTable({ week, cycle, active, records, frontSquat, squatVa
                                     {i === 0 ? 'Warm Up' : 'Active'}
                                 </th>
                             )}
-                            {programRecords.map(record => {
+                            {programRecords.map((record, columnIndex) => {
                                 const weight = calcWeight(oneRepMax(record), set.percentage, cycle, record.increment);
+                                const column = records[columnIndex].key;
+                                const selected = active && selectedSets[column] === i;
                                 return (
-                                    <td key={record.key} class="nowrap" onClick={() => onShowPlates(getPlates(weight))}>
-                                        <span class={isLast ? 'print-50' : undefined}>
-                                            <span class="calculated-weight">{weight}</span>
-                                            {' '}
-                                            <span class="separator--weight-and-reps">x</span>
-                                            {' '}
-                                            <span class="reps">{set.reps}</span>
-                                        </span>
-                                        {isLast && <span class="print-pipe"></span>}
-                                        {isLast && <span class="print-50"></span>}
+                                    <td key={column} class={'nowrap weight-cell' + (selected ? ' selected' : '')}>
+                                        <button type="button" class="weight-button" aria-pressed={selected}
+                                            aria-label={`${record.label}: ${weight} x ${set.reps}`}
+                                            onClick={() => onShowPlates(column, i, record, weight)}>
+                                            <span class={isLast ? 'print-50' : undefined}>
+                                                <span class="calculated-weight">{weight}</span>
+                                                {' '}
+                                                <span class="separator--weight-and-reps">x</span>
+                                                {' '}
+                                                <span class="reps">{set.reps}</span>
+                                            </span>
+                                            {isLast && <span class="print-pipe"></span>}
+                                            {isLast && <span class="print-50"></span>}
+                                        </button>
                                     </td>
                                 );
                             })}

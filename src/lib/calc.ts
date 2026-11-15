@@ -76,9 +76,9 @@ export function weightOnBar(weight: number, bar = 45): { plate: number, count: n
     return out;
 }
 
-export function getPlates(weight: number | '-'): string[] {
+export function getPlates(weight: number | '-', bar = 45): string[] {
     if (weight === '-') {
         return [];
     }
-    return weightOnBar(weight).map(({ plate, count }) => `${count} x ${plate}`);
+    return weightOnBar(weight, bar).map(({ plate, count }) => `${count} x ${plate}`);
 }
