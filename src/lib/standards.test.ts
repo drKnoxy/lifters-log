@@ -45,8 +45,8 @@ describe('getStrengthLevel', () => {
 describe('getStrengthScale', () => {
     const thresholds = [100, 150, 200, 250] as const;
 
-    it('shows three tiers from novice through advanced at lower levels', () => {
-        expect(getStrengthScale(150, thresholds)).toEqual({
+    it('shows novice through advanced for novice lifters', () => {
+        expect(getStrengthScale(99, thresholds)).toEqual({
             min: 100,
             max: 250,
             thresholds: [100, 150, 200],
@@ -54,7 +54,16 @@ describe('getStrengthScale', () => {
         });
     });
 
-    it('shifts the three-tier window up for advanced and elite lifters', () => {
+    it('shows intermediate through elite when the 1RM exceeds novice', () => {
+        expect(getStrengthScale(150, thresholds)).toEqual({
+            min: 150,
+            max: 287.5,
+            thresholds: [150, 200, 250],
+            levels: ['Intermediate', 'Advanced', 'Elite'],
+        });
+    });
+
+    it('keeps the intermediate-through-elite window for advanced and elite lifters', () => {
         expect(getStrengthScale(250, thresholds)).toEqual({
             min: 150,
             max: 287.5,
