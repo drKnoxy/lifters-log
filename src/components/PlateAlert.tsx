@@ -1,14 +1,31 @@
+import { getPlates } from '../lib/calc';
+
 interface Props {
-    messages: string[];
+    lift: string;
+    weight: number | '-';
+    barWeight: number;
+    onBarWeightChange: (weight: number) => void;
     onClose: () => void;
 }
 
-export function PlateAlert({ messages, onClose }: Props) {
+export function PlateAlert({ lift, weight, barWeight, onBarWeightChange, onClose }: Props) {
     return (
         <div class="alert alert-info plate-alert">
-            <button type="button" class="close" onClick={onClose}>x</button>
+            <button type="button" class="close" aria-label="Close plate helper" onClick={onClose}>x</button>
+            <strong>{lift}: {weight} lb</strong>
+            <div>
+                Bar:
+                {[35, 45].map(bar => (
+                    <button type="button" key={bar}
+                        class={'btn btn-default btn-xs' + (barWeight === bar ? ' active' : '')}
+                        aria-pressed={barWeight === bar}
+                        onClick={() => onBarWeightChange(bar)}>
+                        {bar} lb
+                    </button>
+                ))}
+            </div>
             <ul>
-                {messages.map(msg => <li key={msg}>{msg}</li>)}
+                {getPlates(weight, barWeight).map(msg => <li key={msg}>{msg}</li>)}
             </ul>
         </div>
     );

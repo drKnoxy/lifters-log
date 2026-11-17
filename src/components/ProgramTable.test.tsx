@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LiftRecord } from '../lib/calc';
-import { getProgramRecords } from './ProgramTable';
+import { getProgramRecords, toggleSelectedSet } from './ProgramTable';
 
 const records: LiftRecord[] = [
     { key: 'benchPress', label: 'Bench Press', increment: 5, reps: 1, weight: 180 },
@@ -11,6 +11,18 @@ const frontSquat: LiftRecord = { key: 'frontSquat', label: 'Front Squat', increm
 describe('getProgramRecords', () => {
     it('uses the front squat in place of the back squat when selected', () => {
         expect(getProgramRecords(records, frontSquat, 'front')).toEqual([records[0], frontSquat]);
+    });
+
+    describe('toggleSelectedSet', () => {
+        it('selects one set per column without affecting other columns', () => {
+            expect(toggleSelectedSet({ deadlift: 1, benchPress: 2 }, 'deadlift', 3))
+                .toEqual({ deadlift: 3, benchPress: 2 });
+        });
+
+        it('clears a selected set when tapped again', () => {
+            expect(toggleSelectedSet({ deadlift: 1, benchPress: 2 }, 'deadlift', 1))
+                .toEqual({ deadlift: undefined, benchPress: 2 });
+        });
     });
 
     it('keeps the back squat when front squat details are unavailable', () => {

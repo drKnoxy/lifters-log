@@ -51,5 +51,11 @@ describe('getPlates', () => {
 
     it('is empty for a dash', () => {
         expect(getPlates('-')).toEqual([]);
+        expect(getPlates('-', 35)).toEqual([]);
+    });
+
+    it('uses the selected bar weight', () => {
+        expect(getPlates(185, 35)).toEqual(['1 x 45', '1 x 25', '1 x 5']);
+        expect(getPlates(185, 45)).toEqual(['1 x 45', '1 x 25']);
     });
 });
